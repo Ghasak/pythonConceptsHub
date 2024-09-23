@@ -171,7 +171,7 @@ jupyter_server==2.9.1
 jupyter_server_fileid @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_a5j1mo_1cs/croot/jupyter_server_fileid_1684273608144/work
 jupyter_server_terminals==0.4.4
 jupyter_server_ydoc @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_47q6o0w705/croot/jupyter_server_ydoc_1686767400324/work
-jupyterlab==4.0.7
+jupyterlab==4.2.5
 jupyterlab-lsp==5.0.0
 jupyterlab-pygments @ file:///tmp/build/80754af9/jupyterlab_pygments_1601490720602/work
 jupyterlab-vim==4.1.0
