@@ -87,7 +87,7 @@ diff-match-patch @ file:///Users/ktietz/demo/mc3/conda-bld/diff-match-patch_1630
 dill @ file:///Users/cbousseau/work/recipes/ci_py311/dill_1677926161443/work
 distlib==0.3.7
 distributed @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_46b2z6ud_6/croot/distributed_1686866053959/work
-Django==5.0.1
+Django==5.0.8
 django-selenium-login==2.0.0
 djangorestframework==3.14.0
 docstring-to-markdown @ file:///Users/cbousseau/work/recipes/ci_py311/docstring-to-markdown_1677931891483/work
