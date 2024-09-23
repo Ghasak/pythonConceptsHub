@@ -1,0 +1,123 @@
+* Python Fundamental Preimer
+
+To create a comprehensive learning agenda for Python, covering everything from the basics to advanced topics, here's an outline broken down into sections:
+
+* Python Learning Agenda
+** 1. Basics of Python [60%] [3/5]
+   - [X]  Syntax and Structure: Introduction to Python syntax, indentation, and basic constructs.
+   - [X]  Variables and Data Types: Integers, floats, strings, booleans.
+   - [X]  Operators:
+     - [X]  Arithmetic, comparison, logical, bitwise, and assignment operators.
+   - [ ] Control Flow:
+     - [ ]  If-else statements.
+     - [ ]  Loops: `for`, `while`, `break`, `continue`, `else`, `pass`.
+   - [ ]  Functions:
+     - [ ]  Defining and calling functions.
+     - [ ]  Parameters and arguments.
+     - [ ]  Default arguments, keyword arguments, and `*args`, `**kwargs`.
+     - [ ]  Return values and scope.
+
+** 2. Data Containers and Structures
+   - [ ]  Strings:
+     - [ ] Basic string manipulation, slicing, concatenation.
+     - [ ] Formatting (`f-strings`, `format()`, and `%` formatting).
+     - [ ] Common string methods.
+   - [ ] Lists:
+     - [ ]  Creating, accessing, modifying lists.
+     - [ ]  List comprehension.
+     - [ ]  List methods (append, extend, pop, etc.).
+   - [ ] Tuples:
+     - [ ] Creating and accessing tuples.
+     - [ ] Tuple packing and unpacking.
+     - [ ] Immutability of tuples.
+   - [ ] Dictionaries:
+     - [ ] Creating, accessing, and modifying dictionaries.
+     - [ ] Dictionary methods (get, keys, values, items, etc.).
+   - [ ] Sets:
+     - [ ] Creating and working with sets.
+     - [ ] Set operations: union, intersection, difference.
+     - [ ] Methods: add, remove, discard, etc.
+   - [ ] Dataclasses:
+     - [ ] Introduction to `dataclasses`.
+     - [ ] Defining and using `dataclasses`.
+     - [ ] Features: default values, field ordering, and mutability.
+   - [ ] Namedtuples and Deques:
+     - [ ] Using `collections.namedtuple` and `collections.deque`.
+
+** 3. Working with Standard Libraries
+   - [ ] Time and Date Handling:
+     - [ ] `datetime`, `time` modules.
+     - [ ]  Timezone handling with `pytz` or `zoneinfo`.
+   - [ ] File Handling:
+     - [ ] Reading and writing files.
+     - [ ] Working with text, CSV, and JSON files.
+   - [ ] Math and Randomness:
+     - [ ] `math` and `random` modules for numerical and probabilistic operations.
+   - [ ] Regular Expressions:
+     -  [ ] Using `re` for pattern matching.
+     -  [ ] Common use cases: search, match, substitution.
+   - [ ] Permutations and Combinations:
+     - [ ] Using `itertools.permutations` and `itertools.combinations`.
+
+** 4. Object-Oriented Programming (OOP)
+   -  [ ] Classes and Objects:
+     -  [ ] Defining classes, attributes, and methods.
+     -  [ ] Creating and using objects.
+   - [ ] Inheritance:
+     -  [ ] Single and multiple inheritance.
+     -  [ ] Method overriding and `super()`.
+   - [ ] Polymorphism:
+     -  [ ] Concept of polymorphism and method overriding.
+   - [ ] Encapsulation:
+     - [ ] Private, protected, and public access modifiers.
+   - [ ] Abstraction:
+     - [ ] Abstract methods and classes using `abc` module.
+
+** 5. Advanced Topics
+   - [ ] Decorators:
+     - [ ] Function decorators.
+     - [ ] Class decorators.
+   - [ ] Generators and Iterators:
+     - [ ] Using `yield` and creating custom iterators.
+   -  [ ] Context Managers:
+     - [ ] Creating and using `with` statements.
+     - [ ] Writing custom context managers using `__enter__` and `__exit__`.
+   - [ ] Concurrency and Multithreading:
+     - [ ] Introduction to multithreading and multiprocessing.
+     - [ ] `asyncio` for asynchronous programming.
+   - [ ] Metaprogramming:
+     - [ ] Dynamic class creation and modification.
+     - [ ] Working with `__metaclass__`.
+
+** 6. Testing and Debugging
+   - [ ] Unit Testing:
+     - [ ] Using `unittest` or `pytest` for test-driven development.
+   - [ ] Debugging:
+     - [ ] Debugging techniques and using `pdb`.
+     - [ ] Logging with the `logging` module.
+
+** 7. Working with APIs and Web
+   - [ ] HTTP Requests:
+     - [ ] Using `requests` library.
+     - [ ] Handling API responses.
+   -  [ ] Web Scraping:
+     - [ ] Introduction to `BeautifulSoup` and `Scrapy`.
+
+** Summary (Bullet points)
+   - [ ] Basics:
+     - [ ] Python syntax, variables, operators, control flow, and functions.
+   - [ ] Data Containers:
+     - [ ] Strings, lists, tuples, dictionaries, sets.
+     - [ ] Dataclasses, namedtuples, deques.
+   - [ ] Standard Libraries:
+     - [ ] Time/date, file handling, math, random, regular expressions.
+     - [ ] Permutations and combinations.
+   - [ ] OOP:
+     - [ ] Classes, objects, inheritance, polymorphism, encapsulation, abstraction.
+   - [ ] Advanced Concepts:
+     -  [ ] Decorators, generators, iterators, context managers.
+     -  [ ] Concurrency (multithreading, asyncio), metaprogramming.
+   - [ ] Testing/Debugging:
+     - [ ] Unit testing with `unittest` or `pytest`, debugging with `pdb`.
+   - [ ] Web/External Libraries:
+     - [ ] API interaction with `requests`, web scraping with `BeautifulSoup`.
