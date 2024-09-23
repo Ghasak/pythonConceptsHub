@@ -225,23 +225,35 @@ This summary should give you a comprehensive understanding of Python's dataclass
 
 ### Why Do We Need `default_factory`?
 
-In Python, mutable default arguments (like lists, dictionaries, sets, etc.) can lead to unexpected behavior. If a mutable default argument is shared across instances of a class, modifying it in one instance can affect other instances.
+In Python, mutable default arguments (like lists, dictionaries, sets, etc.) can
+lead to unexpected behavior. If a mutable default argument is shared across
+instances of a class, modifying it in one instance can affect other instances.
 
-To avoid this issue, `default_factory` in Python dataclasses is used to create default values for fields that need mutable data types or for dynamically computed values. It ensures each instance gets a fresh, independent object rather than sharing one.
+To avoid this issue, `default_factory` in Python dataclasses is used to create
+default values for fields that need mutable data types or for dynamically
+computed values. It ensures each instance gets a fresh, independent object
+rather than sharing one.
 
 ---
 
 ### When to Use `default_factory`?
 
-- **Mutable default values**: For fields that need mutable types (lists, dictionaries), using a factory function ensures that each instance has its own independent copy.
-- **Dynamic defaults**: When the default value of a field depends on some logic, and you want that logic to run when the class is instantiated (instead of at the time of definition).
-- **Lazy initialization**: When an object or value should only be created at runtime.
+- **Mutable default values**: For fields that need mutable types (lists,
+  dictionaries), using a factory function ensures that each instance has its own
+  independent copy.
+- **Dynamic defaults**: When the default value of a field depends on some logic,
+  and you want that logic to run when the class is instantiated (instead of at
+  the time of definition).
+- **Lazy initialization**: When an object or value should only be created at
+  runtime.
 
 ---
 
 ### How to Use `default_factory`?
 
-You use the `field()` function with the `default_factory` argument, passing a callable (usually a function or class) that generates the default value. Here are some examples:
+You use the `field()` function with the `default_factory` argument, passing a
+callable (usually a function or class) that generates the default value. Here
+are some examples:
 
 ---
 
@@ -265,7 +277,9 @@ print(team1.members)  # Output: ['Alice']
 print(team2.members)  # Output: [] (Not affected by team1)
 ```
 
-In this example, without `default_factory`, using a default argument like `members: list = []` would result in both `team1` and `team2` sharing the same list.
+In this example, without `default_factory`, using a default argument like
+`members: list = []` would result in both `team1` and `team2` sharing the same
+list.
 
 ---
 
@@ -712,4 +726,154 @@ This breakdown covers each parameter with explanations and examples, showing how
 they can customize the behavior of dataclasses. Let me know if you'd like more
 details!
 
+
+
+In Python, if you use `frozen=True` with a dataclass, it makes **all fields immutable**. However, if you want to achieve partial immutability (i.e., make some fields immutable while allowing others to be mutable), there isn't a direct way to do it just with `frozen=True`.
+
+### Workaround to Make Some Fields Immutable
+
+You can manually control immutability by using the `property` decorator in combination with `@dataclass` to control the mutability of specific fields. This approach allows you to make some fields immutable by only providing a getter (read-only property), while other fields remain mutable.
+
+---
+
+### Example of Partially Immutable Dataclass
+
+In the example below, the `id` field is immutable (read-only), while the `name` field remains mutable.
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass
+class Person:
+    _id: int
+    name: str
+    
+    # Property to make 'id' immutable (read-only)
+    @property
+    def id(self):
+        return self._id
+
+# Usage
+p = Person(_id=123, name="Alice")
+print(p.id)  # Output: 123
+p.name = "Bob"  # Works, as 'name' is mutable
+print(p.name)  # Output: Bob
+
+# p.id = 456  # Raises an AttributeError: can't set attribute, since 'id' is read-only
+```
+
+Here, `id` is a read-only property, so trying to set it after initialization raises an `AttributeError`, while the `name` field is mutable and can be changed.
+
+---
+
+### Another Approach: Customizing `__setattr__()`
+
+If you want more control and flexibility, you can override the `__setattr__()` method to enforce immutability only for specific fields.
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Employee:
+    id: int
+    name: str
+    salary: float
+    
+    def __setattr__(self, name, value):
+        # Enforce immutability for 'id' field
+        if name == "id" and hasattr(self, name):
+            raise AttributeError(f"{name} is immutable.")
+        else:
+            super().__setattr__(name, value)
+
+# Usage
+emp = Employee(id=1, name="Alice", salary=50000)
+emp.name = "Bob"  # Works, as 'name' is mutable
+print(emp.name)  # Output: Bob
+
+# emp.id = 2  # Raises: AttributeError: id is immutable.
+```
+
+This approach allows you to enforce immutability selectively by intercepting assignments to specific fields.
+
+---
+
+### Summary
+
+- **Frozen Dataclass**: If you use `frozen=True`, **all fields** are immutable.
+- **Custom Properties**: Use the `property` decorator to make some fields
+  immutable while others remain mutable.
+- **Override `__setattr__()`**: Customize the behavior by overriding the
+  `__setattr__()` method to control which fields can or cannot be changed after
+  initialization.
+
+
+Yes, you're correct. You **cannot** combine the `frozen=True` option with the
+manual `property` workaround or `__setattr__()` override. When you use
+`frozen=True` in a dataclass, **all fields become immutable**, and Python
+prevents any modification of instance attributes entirely.
+
+In a `frozen=True` dataclass, trying to modify any attribute raises a
+`FrozenInstanceError`. Since frozen dataclasses are implemented by making the
+class `__setattr__()` and `__delattr__()` methods raise exceptions, you can't
+override these methods to customize immutability for specific fields.
+
+### Why You Can't Combine `frozen=True` and `property`/`__setattr__()`:
+
+- **With `frozen=True`**, Python injects restrictions on **all fields** by
+  overriding `__setattr__()` and making it impossible to selectively modify
+  fields or implement custom logic for immutability.
+- When the dataclass is frozen, it is a global lock on mutability for the entire
+  instance.
+
+### Alternative Approach
+
+If you need selective immutability, you must skip using `frozen=True` and
+instead manage immutability yourself through custom logic, such as:
+1. **Using `property` for read-only fields.**
+2. **Overriding `__setattr__()`** to selectively control which fields are
+   modifiable.
+
+### Example:
+
+Here’s an alternative without `frozen=True` but achieving selective immutability:
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass
+class Employee:
+    id: int  # Immutable field
+    name: str  # Mutable field
+    
+    # Property to make 'id' immutable
+    @property
+    def id(self):
+        return self._id
+    
+    # Override __setattr__ to enforce immutability for 'id'
+    def __setattr__(self, name, value):
+        if name == "_id" and hasattr(self, "_id"):
+            raise AttributeError(f"'{name}' is immutable.")
+        super().__setattr__(name, value)
+
+    def __post_init__(self):
+        # Initialize _id privately, because 'id' is a read-only property
+        self._id = self.id
+        del self.id  # Remove the public attribute to force property access
+
+# Usage
+emp = Employee(id=1, name="Alice")
+print(emp.id)  # Output: 1
+emp.name = "Bob"  # This works because 'name' is mutable
+# emp.id = 2  # Raises: AttributeError: '_id' is immutable.
+```
+
+### Conclusion:
+- You **cannot** selectively apply immutability while using `frozen=True` in
+  dataclasses.
+- You can achieve partial immutability using custom logic, like `property` or
+  `__setattr__()`, without using `frozen=True`.
+
+Let me know if you need further clarification!
 
