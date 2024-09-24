@@ -1,0 +1,21 @@
+{
+    "include": [
+        "src/**/*.py"
+    ],
+    "exclude": [
+        "**/__pycache__",
+        "**/*.pyi",
+        "temp/**",
+        "test/**"
+    ],
+    "reportMissingImports": true,
+    "reportMissingTypeStubs": false,
+    "pythonPlatform": "macOS",
+    "pythonVersion": "3.11.5",  // Adjust according to your installed version
+    "typeCheckingMode": "off",
+    "useLibraryCodeForTypes": true,
+    "extraPaths": [
+        "./src"
+    ]
+}
+

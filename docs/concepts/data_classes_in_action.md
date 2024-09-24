@@ -56,6 +56,31 @@
             - [Why We Need It:](#why-we-need-it-5)
             - [Example:](#example-5)
         - [Summary Table for `@dataclass()` Parameters](#summary-table-for-dataclass-parameters)
+        - [Workaround to Make Some Fields Immutable](#workaround-to-make-some-fields-immutable)
+        - [Example of Partially Immutable Dataclass](#example-of-partially-immutable-dataclass)
+        - [Another Approach: Customizing `__setattr__()`](#another-approach-customizing-__setattr__)
+        - [Summary](#summary)
+        - [Why You Can't Combine `frozen=True` and `property`/`__setattr__()`:](#why-you-cant-combine-frozentrue-and-property__setattr__)
+        - [Alternative Approach](#alternative-approach)
+        - [Example:](#example-6)
+        - [Conclusion:](#conclusion)
+        - [Explanation and Examples of Using `slots` in Dataclasses](#explanation-and-examples-of-using-slots-in-dataclasses)
+            - [What are slots?](#what-are-slots)
+            - [Using `slots=True` in Dataclasses](#using-slotstrue-in-dataclasses)
+        - [Explanation of Dataclass Field Arguments](#explanation-of-dataclass-field-arguments)
+            - [1. `init=True/False`](#1-inittruefalse)
+            - [2. `repr=True/False`](#2-reprtruefalse)
+            - [3. `default=None`](#3-defaultnone)
+            - [4. `default_factory`](#4-default_factory)
+        - [Summary Table](#summary-table-1)
+        - [Definitions and Differences](#definitions-and-differences)
+        - [Example Demonstrating the Differences](#example-demonstrating-the-differences)
+        - [Key Differences Highlighted:](#key-differences-highlighted)
+        - [Conclusion](#conclusion)
+        - [Definitions and Differences](#definitions-and-differences-1)
+        - [Example Demonstrating the Differences](#example-demonstrating-the-differences-1)
+        - [Key Differences Highlighted:](#key-differences-highlighted-1)
+        - [Conclusion](#conclusion-1)
 
 <!-- markdown-toc end -->
 
@@ -513,9 +538,11 @@ Let me know if you'd like more detailed examples or have other questions about d
 ### 1. `init`: Add `__init__()` Method?
 
 #### What It Is:
+
 The `init` parameter controls whether the `__init__()` method should be auto-generated for your dataclass. If set to `True` (the default), the dataclass will generate an `__init__()` method based on the fields defined in the class.
 
 #### Why We Need It:
+
 In most cases, we want dataclasses to auto-generate the `__init__()` method, saving us the trouble of manually writing it. However, there are cases where you may want to manage the initialization yourself (e.g., when more complex logic is required or when using another design pattern).
 
 #### Example:
@@ -550,9 +577,11 @@ print(car_manual)  # Output: CarManualInit(make='Toyota', model='Corolla')
 ### 2. `repr`: Add `__repr__()` Method?
 
 #### What It Is:
+
 The `repr` parameter controls whether a `__repr__()` method should be auto-generated for your dataclass. This method returns a string that represents the object in a readable way, useful for debugging or logging.
 
 #### Why We Need It:
+
 Having a good `__repr__()` method makes it easier to inspect and debug objects. However, in cases where you want to hide certain fields or provide a custom representation, you can set `repr=False` or manually define your own `__repr__()` method.
 
 #### Example:
@@ -581,9 +610,11 @@ print(emp_conf)  # Output: <__main__.ConfidentialEmployee object at 0x...>
 ### 3. `eq`: Add `__eq__()` Method?
 
 #### What It Is:
+
 The `eq` parameter controls whether the dataclass should auto-generate the `__eq__()` method, which compares two objects for equality. By default, it checks whether the values of all the fields are the same between two instances.
 
 #### Why We Need It:
+
 The `__eq__()` method is useful for checking equality between instances. In certain cases, you may not want equality to depend on all fields, or you may want to implement a custom equality method.
 
 #### Example:
@@ -614,10 +645,15 @@ print(prod_manual == prod_manual2)  # Output: False (No equality check)
 ### 4. `order`: Add Ordering Methods?
 
 #### What It Is:
-The `order` parameter controls whether comparison methods (`<`, `<=`, `>`, `>=`) are auto-generated. If `order=True`, the dataclass will add ordering methods based on the field values.
+
+The `order` parameter controls whether comparison methods (`<`, `<=`, `>`, `>=`)
+are auto-generated. If `order=True`, the dataclass will add ordering methods
+based on the field values.
 
 #### Why We Need It:
-If you want to compare instances of a dataclass (e.g., sorting employees by salary), you can set `order=True` to auto-generate the comparison methods.
+
+If you want to compare instances of a dataclass (e.g., sorting employees by
+salary), you can set `order=True` to auto-generate the comparison methods.
 
 #### Example:
 
@@ -647,10 +683,17 @@ class UnorderedEmployee:
 ### 5. `unsafe_hash`: Force the Addition of a `__hash__()` Method?
 
 #### What It Is:
-The `unsafe_hash` parameter forces the generation of a `__hash__()` method, even when the class is mutable. Normally, mutable classes (which can change their values) should not be hashable because their hash might change when fields change.
+
+The `unsafe_hash` parameter forces the generation of a `__hash__()` method, even
+when the class is mutable. Normally, mutable classes (which can change their
+values) should not be hashable because their hash might change when fields
+change.
 
 #### Why We Need It:
-Use `unsafe_hash=True` if you need instances of your dataclass to be hashable (e.g., to be used in sets or as dictionary keys), but be careful—changing a field after hashing can lead to inconsistent results.
+
+Use `unsafe_hash=True` if you need instances of your dataclass to be hashable
+(e.g., to be used in sets or as dictionary keys), but be careful—changing a
+field after hashing can lead to inconsistent results.
 
 #### Example:
 
@@ -678,11 +721,13 @@ class UnhashableProduct:
 ### 6. `frozen`: Make the Instance Immutable?
 
 #### What It Is:
+
 The `frozen` parameter makes a dataclass immutable. If `frozen=True`, the fields
 cannot be changed after initialization, and attempts to modify them will raise
 an exception.
 
 #### Why We Need It:
+
 If you need your dataclass to be immutable (like a tuple), use `frozen=True`.
 This is especially useful when you want instances to be hashable, as
 immutability guarantees consistent hash values.
@@ -713,32 +758,37 @@ print(emp_mutable.name)  # Output: Bob
 
 ### Summary Table for `@dataclass()` Parameters
 
-| **Parameter**      | **Description**                                                                                                                                         | **Default**      | **Example**                                                                                                     |
-|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|-----------------------------------------------------------------------------------------------------------------|
-| `init`             | Automatically adds an `__init__()` method that initializes the fields.                                                                                   | `True`           | `@dataclass(init=False)` if you want to manually define the constructor.                                         |
-| `repr`             | Automatically adds a `__repr__()` method for a readable string representation.                                                                           | `True`           | `@dataclass(repr=False)` if you don't want the default string representation.                                   |
-| `eq`               | Automatically adds an `__eq__()` method for checking equality between instances.                                                                         | `True`           | `@dataclass(eq=False)` if you want to disable automatic equality checks.                                        |
-| `order`            | Automatically adds ordering methods (`<`, `<=`, `>`, `>=`) for comparing instances.                                                                     | `False`          | `@dataclass(order=True)` if you want to enable instance comparison.                                             |
-| `unsafe_hash`      | Forces the addition of a `__hash__()` method, even for mutable instances. Use with caution, as it can lead to inconsistent behavior if fields are changed. | `False`          | `@dataclass(unsafe_hash=True)` to make instances hashable, even if the class is mutable.                        |
-| `frozen`           | Makes the dataclass immutable (fields cannot be modified after initialization).                                                                          | `False`          | `@dataclass(frozen=True)` if you want to make the instance immutable like a tuple.                               |
+| **Parameter** | **Description**                                                                                                                                            | **Default** | **Example**                                                                              |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------- |
+| `init`        | Automatically adds an `__init__()` method that initializes the fields.                                                                                     | `True`      | `@dataclass(init=False)` if you want to manually define the constructor.                 |
+| `repr`        | Automatically adds a `__repr__()` method for a readable string representation.                                                                             | `True`      | `@dataclass(repr=False)` if you don't want the default string representation.            |
+| `eq`          | Automatically adds an `__eq__()` method for checking equality between instances.                                                                           | `True`      | `@dataclass(eq=False)` if you want to disable automatic equality checks.                 |
+| `order`       | Automatically adds ordering methods (`<`, `<=`, `>`, `>=`) for comparing instances.                                                                        | `False`     | `@dataclass(order=True)` if you want to enable instance comparison.                      |
+| `unsafe_hash` | Forces the addition of a `__hash__()` method, even for mutable instances. Use with caution, as it can lead to inconsistent behavior if fields are changed. | `False`     | `@dataclass(unsafe_hash=True)` to make instances hashable, even if the class is mutable. |
+| `frozen`      | Makes the dataclass immutable (fields cannot be modified after initialization).                                                                            | `False`     | `@dataclass(frozen=True)` if you want to make the instance immutable like a tuple.       |
 
 This breakdown covers each parameter with explanations and examples, showing how
 they can customize the behavior of dataclasses. Let me know if you'd like more
 details!
 
-
-
-In Python, if you use `frozen=True` with a dataclass, it makes **all fields immutable**. However, if you want to achieve partial immutability (i.e., make some fields immutable while allowing others to be mutable), there isn't a direct way to do it just with `frozen=True`.
+In Python, if you use `frozen=True` with a dataclass, it makes **all fields
+immutable**. However, if you want to achieve partial immutability (i.e., make
+some fields immutable while allowing others to be mutable), there isn't a direct
+way to do it just with `frozen=True`.
 
 ### Workaround to Make Some Fields Immutable
 
-You can manually control immutability by using the `property` decorator in combination with `@dataclass` to control the mutability of specific fields. This approach allows you to make some fields immutable by only providing a getter (read-only property), while other fields remain mutable.
+You can manually control immutability by using the `property` decorator in
+combination with `@dataclass` to control the mutability of specific fields. This
+approach allows you to make some fields immutable by only providing a getter
+(read-only property), while other fields remain mutable.
 
 ---
 
 ### Example of Partially Immutable Dataclass
 
-In the example below, the `id` field is immutable (read-only), while the `name` field remains mutable.
+In the example below, the `id` field is immutable (read-only), while the `name`
+field remains mutable.
 
 ```python
 from dataclasses import dataclass, field
@@ -747,7 +797,7 @@ from dataclasses import dataclass, field
 class Person:
     _id: int
     name: str
-    
+
     # Property to make 'id' immutable (read-only)
     @property
     def id(self):
@@ -762,7 +812,9 @@ print(p.name)  # Output: Bob
 # p.id = 456  # Raises an AttributeError: can't set attribute, since 'id' is read-only
 ```
 
-Here, `id` is a read-only property, so trying to set it after initialization raises an `AttributeError`, while the `name` field is mutable and can be changed.
+Here, `id` is a read-only property, so trying to set it after initialization
+raises an `AttributeError`, while the `name` field is mutable and can be
+changed.
 
 ---
 
@@ -778,7 +830,7 @@ class Employee:
     id: int
     name: str
     salary: float
-    
+
     def __setattr__(self, name, value):
         # Enforce immutability for 'id' field
         if name == "id" and hasattr(self, name):
@@ -807,7 +859,6 @@ This approach allows you to enforce immutability selectively by intercepting ass
   `__setattr__()` method to control which fields can or cannot be changed after
   initialization.
 
-
 Yes, you're correct. You **cannot** combine the `frozen=True` option with the
 manual `property` workaround or `__setattr__()` override. When you use
 `frozen=True` in a dataclass, **all fields become immutable**, and Python
@@ -830,6 +881,7 @@ override these methods to customize immutability for specific fields.
 
 If you need selective immutability, you must skip using `frozen=True` and
 instead manage immutability yourself through custom logic, such as:
+
 1. **Using `property` for read-only fields.**
 2. **Overriding `__setattr__()`** to selectively control which fields are
    modifiable.
@@ -845,12 +897,12 @@ from dataclasses import dataclass, field
 class Employee:
     id: int  # Immutable field
     name: str  # Mutable field
-    
+
     # Property to make 'id' immutable
     @property
     def id(self):
         return self._id
-    
+
     # Override __setattr__ to enforce immutability for 'id'
     def __setattr__(self, name, value):
         if name == "_id" and hasattr(self, "_id"):
@@ -870,10 +922,386 @@ emp.name = "Bob"  # This works because 'name' is mutable
 ```
 
 ### Conclusion:
+
 - You **cannot** selectively apply immutability while using `frozen=True` in
   dataclasses.
 - You can achieve partial immutability using custom logic, like `property` or
   `__setattr__()`, without using `frozen=True`.
 
-Let me know if you need further clarification!
+---
 
+### Explanation and Examples of Using `slots` in Dataclasses
+
+#### What are slots?
+
+Python classes by default use a dictionary to store their attributes, which
+allows for dynamic attribute bindings and modification. However, this
+flexibility comes at the cost of higher memory usage. The `__slots__` attribute
+changes the behavior by defining a static structure which significantly reduces
+the memory overhead.
+
+#### Using `slots=True` in Dataclasses
+
+In Python's dataclasses, the `slots=True` argument can be used to automatically
+generate the `__slots__` attribute, limiting the instance to only the fields
+defined and potentially improving memory usage and attribute access speed.
+
+**Example:**
+
+```python
+from dataclasses import dataclass
+
+@dataclass(slots=True)
+class InventoryItem:
+    name: str
+    unit_price: float
+    quantity_on_hand: int = 0
+
+    def total_cost(self) -> float:
+        return self.unit_price * self.quantity_on_hand
+```
+
+In this example, an `InventoryItem` class is defined with slots, restricting
+instances to the specified attributes only, potentially reducing memory usage.
+
+### Explanation of Dataclass Field Arguments
+
+#### 1. `init=True/False`
+
+This argument in a dataclass field specifies whether the field should be
+included as a parameter in the generated `__init__()` method of the dataclass.
+
+- `init=True`: The field is included in the `__init__()` method.
+- `init=False`: The field is not included in the `__init__()` method.
+
+**Example:**
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass
+class Employee:
+    name: str
+    id: int = field(init=False, default=999)
+```
+
+Here, `id` is not included as a parameter in the `__init__()` method and defaults to `999`.
+
+#### 2. `repr=True/False`
+
+This argument controls whether the field should be included in the autogenerated `__repr__()` method.
+
+- `repr=True`: Includes the field in the string returned by `__repr__()`.
+- `repr=False`: Excludes the field from the `__repr__()` output.
+
+**Example:**
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass
+class Employee:
+    name: str
+    id: int = field(repr=False)
+```
+
+The `id` will not be included in the `__repr__()` output for instances of `Employee`.
+
+#### 3. `default=None`
+
+This sets a default value for the field if no value is provided during instantiation.
+
+**Example:**
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Employee:
+    name: str
+    id: int = field(default=None)
+```
+
+If `id` is not provided during instantiation, it defaults to `None`.
+
+#### 4. `default_factory`
+
+Used when the default value needs to be a dynamically created object, like a
+list or a dictionary, which should not be shared between instances.
+
+**Example:**
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass
+class Employee:
+    skills: list = field(default_factory=list)
+```
+
+Each `Employee` instance gets its own list for `skills`.
+
+### Summary Table
+
+| Keyword           | Use Cases                         | Description                                                                  | When It's Used                                     |
+| ----------------- | --------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------- |
+| `slots=True`      | Optimizing memory usage           | Uses static structure to store attributes, reducing per-instance memory cost | Dataclasses with many instances                    |
+| `init=True/False` | Control `__init__()` parameters   | Include/exclude fields in the autogenerated constructor                      | Customizing constructor parameters                 |
+| `repr=True/False` | Customizing object representation | Determine if a field should be included in `__repr__()` output               | Adjusting how objects are represented              |
+| `default=None`    | Setting default field values      | Provide a default value for a field if none is given during instantiation    | Fields that should have a default value            |
+| `default_factory` | Default value for mutable types   | Generate a default value for each instance independently                     | When default values need to be unique per instance |
+
+This table outlines the use cases and descriptions of various dataclass field
+configurations, helping to choose the right configuration depending on the
+specific needs of your application.
+
+---
+
+The two field configurations you mentioned in the context of Python dataclasses
+do seem similar at first glance, but they have distinct behaviors:
+
+### Definitions and Differences
+
+1. **`some_value : str = field(init=False, repr=False)`**
+
+   - **`init=False`** means that `some_value` is not included as a parameter in
+     the `__init__()` method of the dataclass. This implies that you cannot set
+     it directly at instantiation.
+   - **`repr=False`** means that `some_value` will not be included in the
+     autogenerated `__repr__()` output of the dataclass.
+   - **Default value** is not specified, which means Python will raise an error
+     if you try to access `some_value` without setting it first.
+
+2. **`some_value : str = field(default=None, repr=False)`**
+   - **`default=None`** explicitly sets the default value of `some_value` to
+     `None`. This allows `some_value` to be accessed immediately after
+     instantiation, even if no value is provided during instantiation.
+   - **`repr=False`** has the same effect as in the first case, excluding
+     `some_value` from the `__repr__()` output.
+   - This field is included in the `__init__()` method by default because `init`
+     is not specified (defaults to `True`), allowing the value to be set at
+     object creation.
+
+### Example Demonstrating the Differences
+
+Let's define two classes with these fields and see how object creation differs:
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass
+class ExampleA:
+    some_value: str = field(init=False, repr=False)
+
+@dataclass
+class ExampleB:
+    some_value: str = field(default=None, repr=False)
+
+# Creating objects
+try:
+    obj_a = ExampleA()
+    print("ExampleA created")
+    print(f"Value of some_value in ExampleA: {obj_a.some_value}")
+except AttributeError as e:
+    print(f"Error when accessing uninitialized some_value in ExampleA: {e}")
+
+obj_b = ExampleB()
+print("ExampleB created")
+print(f"Value of some_value in ExampleB: {obj_b.some_value}")
+
+# Attempt to set some_value directly at instantiation (should fail for ExampleA)
+try:
+    obj_a = ExampleA(some_value="Test")
+except TypeError as e:
+    print(f"Error when initializing ExampleA with some_value: {e}")
+
+obj_b = ExampleB(some_value="Test")
+print(f"ExampleB created with some_value set at instantiation: {obj_b.some_value}")
+```
+
+### Key Differences Highlighted:
+
+- **Initialization**: `ExampleA` does not allow setting `some_value` at
+  instantiation due to `init=False`. Trying to do so will result in a
+  `TypeError`.
+- **Default Value**: `ExampleA` will raise an error if `some_value` is accessed
+  without being explicitly set after object creation, while `ExampleB` will not
+  because it defaults to `None`.
+- **Instantiation**: You can pass `some_value` directly when creating an
+  instance of `ExampleB`, but not for `ExampleA`.
+
+### Conclusion
+
+- They are not the same because `ExampleA` requires you to set `some_value`
+  manually after creating an instance (and does not accept it as an `__init__`
+  argument), whereas `ExampleB` allows you to set it either during instantiation
+  or use the default value. This makes `ExampleB` more flexible and
+  user-friendly in scenarios where you want a default value that can optionally
+  be overridden.
+
+---
+
+The two field configurations you mentioned in the context of Python dataclasses
+do seem similar at first glance, but they have distinct behaviors:
+
+### Definitions and Differences
+
+1. **`some_value : str = field(init=False, repr=False)`**
+
+   - **`init=False`** means that `some_value` is not included as a parameter in
+     the `__init__()` method of the dataclass. This implies that you cannot set
+     it directly at instantiation.
+   - **`repr=False`** means that `some_value` will not be included in the
+     autogenerated `__repr__()` output of the dataclass.
+   - **Default value** is not specified, which means Python will raise an error
+     if you try to access `some_value` without setting it first.
+
+2. **`some_value : str = field(default=None, repr=False)`**
+   - **`default=None`** explicitly sets the default value of `some_value` to
+     `None`. This allows `some_value` to be accessed immediately after
+     instantiation, even if no value is provided during instantiation.
+   - **`repr=False`** has the same effect as in the first case, excluding
+     `some_value` from the `__repr__()` output.
+   - This field is included in the `__init__()` method by default because `init`
+     is not specified (defaults to `True`), allowing the value to be set at
+     object creation.
+
+### Example Demonstrating the Differences
+
+Let's define two classes with these fields and see how object creation differs:
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass
+class ExampleA:
+    some_value: str = field(init=False, repr=False)
+
+@dataclass
+class ExampleB:
+    some_value: str = field(default=None, repr=False)
+
+# Creating objects
+try:
+    obj_a = ExampleA()
+    print("ExampleA created")
+    print(f"Value of some_value in ExampleA: {obj_a.some_value}")
+except AttributeError as e:
+    print(f"Error when accessing uninitialized some_value in ExampleA: {e}")
+
+obj_b = ExampleB()
+print("ExampleB created")
+print(f"Value of some_value in ExampleB: {obj_b.some_value}")
+
+# Attempt to set some_value directly at instantiation (should fail for ExampleA)
+try:
+    obj_a = ExampleA(some_value="Test")
+except TypeError as e:
+    print(f"Error when initializing ExampleA with some_value: {e}")
+
+obj_b = ExampleB(some_value="Test")
+print(f"ExampleB created with some_value set at instantiation: {obj_b.some_value}")
+```
+
+### Key Differences Highlighted:
+
+- **Initialization**: `ExampleA` does not allow setting `some_value` at
+  instantiation due to `init=False`. Trying to do so will result in a
+  `TypeError`.
+- **Default Value**: `ExampleA` will raise an error if `some_value` is accessed
+  without being explicitly set after object creation, while `ExampleB` will not
+  because it defaults to `None`.
+- **Instantiation**: You can pass `some_value` directly when creating an
+  instance of `ExampleB`, but not for `ExampleA`.
+
+### Conclusion
+
+- They are not the same because `ExampleA` requires you to set `some_value`
+  manually after creating an instance (and does not accept it as an `__init__`
+  argument), whereas `ExampleB` allows you to set it either during instantiation
+  or use the default value. This makes `ExampleB` more flexible and
+  user-friendly in scenarios where you want a default value that can optionally
+  be overridden.
+
+Below is a table summarizing the differences between the two field configurations in dataclasses:
+
+| **Aspect**                      | **ExampleA: `some_value: str = field(init=False, repr=False)`**                            | **ExampleB: `some_value: str = field(default=None, repr=False)`**  |
+| ------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| **Included in `__init__()`**    | No, cannot be set during instantiation.                                                    | Yes, can be set during instantiation or will use default (`None`). |
+| **Default Value Provision**     | No default value, must be set manually after instantiation.                                | Default value is `None`, automatically set.                        |
+| **Access Post-Instantiation**   | Raises error if accessed before being explicitly set.                                      | Can be accessed immediately with default or set value.             |
+| **Error on Unset Access**       | Will raise an `AttributeError` if accessed before setting.                                 | No error, returns `None` if not set during instantiation.          |
+| **Representation (`__repr__`)** | Excluded due to `repr=False`.                                                              | Excluded due to `repr=False`.                                      |
+| **Flexibility**                 | Less flexible, requires manual setting post-creation.                                      | More flexible, supports immediate use and default initialization.  |
+| **Usage Scenario**              | Suitable when post-creation initialization is needed or for attributes managed internally. | Suitable for optional attributes with a sensible default.          |
+
+This table highlights the operational differences and typical usage scenarios,
+helping you to decide which configuration might be better suited to your
+specific needs in Python applications.
+
+
+## What is InitVar
+
+Ah, `InitVar` in Python dataclasses is a type specifically meant for fields that
+are needed during the initialization process but are not intended to be stored
+as part of the object's attributes after initialization is complete.
+Essentially, `InitVar` fields are used for providing temporary data that is used
+to compute or set other fields within the dataclass during the `__post_init__`
+method.
+
+### Understanding `InitVar`
+
+`InitVar` is used for initialization variables that are not part of the actual
+data record (or persistent state) of the dataclass. This is particularly useful
+for parameters that are needed for the initialization but should not be part of
+the object's state after initialization.
+
+### How to Use `InitVar`
+
+Here's a step-by-step explanation on how to use `InitVar`:
+
+1. **Import `InitVar`:** First, you need to import `InitVar` from the
+   `dataclasses` module.
+2. **Define `InitVar` Fields:** In the dataclass, declare fields as
+   `InitVar[type]` where `type` is the expected type of the initialization
+   variable.
+3. **Use in `__post_init__`:** These variables can then be used in the
+   `__post_init__` method to perform additional initializations or to compute
+   values for the actual fields of the dataclass.
+
+### Example
+
+Here's an example to demonstrate how `InitVar` might be used:
+
+```python
+from dataclasses import dataclass, field, InitVar
+
+@dataclass
+class Student:
+    name: str
+    graduating: bool = field(init=False)
+    age: int
+    graduation_year: InitVar[int]  # This is used to compute `graduating`
+
+    def __post_init__(self, graduation_year: int):
+        current_year = 2021
+        self.graduating = (graduation_year == current_year)
+
+# Example usage
+student = Student(name="John Doe", age=21, graduation_year=2021)
+print(student)  # Output will not include graduation_year, but will show graduating status
+```
+
+In this example:
+- `graduation_year` is provided during instantiation but isn't stored as part of the object. It's only used to compute whether the student is graduating this year.
+- The `graduating` attribute is then computed based on the `graduation_year` passed during initialization.
+
+### Summary of `InitVar`
+
+| Aspect        | Description                                                                                                                                                          |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Purpose       | To provide additional data needed during initialization but not meant to be part of the object’s permanent state.                                                     |
+| Usage         | It is declared as `field_name: InitVar[type]` and used within the `__post_init__` method.                                                                             |
+| Common Use    | Initialization parameters that are needed to compute the actual attributes of a dataclass but do not need to be stored as part of the dataclass's persistent state. |
+
+Using `InitVar` can help make your dataclass definitions clearer by separating temporary initialization data from the persistent state of objects, enhancing the maintainability and readability of your code.
