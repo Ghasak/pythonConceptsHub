@@ -5,6 +5,8 @@
 
 - [Data Classes in Action](#data-classes-in-action)
     - [-](#-)
+    - [Table 2: Keywords and Options in the `field()` Function](#table-2-keywords-and-options-in-the-field-function)
+    - [What Are Python Dataclasses?](#what-are-python-dataclasses)
     - [Why Do We Need Dataclasses?](#why-do-we-need-dataclasses)
     - [How to Use Dataclasses?](#how-to-use-dataclasses)
     - [Syntax of a Modern Python Dataclass](#syntax-of-a-modern-python-dataclass)
@@ -88,6 +90,36 @@
         - [Summary of `InitVar`](#summary-of-initvar)
 
 <!-- markdown-toc end -->
+
+A comprehensive overview of key concepts and attributes
+associated with Python dataclasses, including those used within the `field()`
+function and others that are essential for defining and customizing dataclasses.
+
+### Table 1: Key Dataclass Attributes and Methods
+
+| Keyword         | Description                                                                                                                                                               | Use Cases                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `slots`         | Adds `__slots__` attribute to automatically generated class to reduce memory usage by preventing the creation of `__dict__` and `__weakref__` per instance.               | When managing memory is crucial, especially with many instances. |
+| `InitVar`       | Type hint for fields that are used only during initialization (in `__post_init__`). These fields do not become part of the object’s instance state.                       | Temporary variables needed for initialization but not stored.    |
+| `__post_init__` | A special method that gets called immediately after the generated `__init__` method. Useful for additional initialization that can't be handled in the field definitions. | Setting up instance variables that depend on other fields.       |
+| `init`          | Specifies if the field should be included as a parameter to the generated `__init__` method.                                                                              | Controlling the fields that are initialized directly.            |
+| `factory`       | A common misreference, usually meant to indicate `default_factory`, which sets a callable to provide a default value for a field, called for each new instance.           | To provide default values that are mutable or complex objects.   |
+| `repr`          | Determines whether the field should be included in the automatically generated `__repr__` method of the dataclass.                                                        | Customizing object representation for debugging and logging.     |
+| `default`       | Provides a default value for a field. This value is shared among all instances, unless a new value is specified during instantiation.                                     | Setting static default values for fields.                        |
+| `init` in field | Attribute in `field()` that can be set to True or False to include or exclude the field from the generated `__init__` method.                                             | To include/exclude fields from automatic constructor.            |
+
+### Table 2: Keywords and Options in the `field()` Function
+
+| Field Attribute   | Description                                                                                                                                                  | When It's Used                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `default`         | Sets a default value for the field, which is used if no value is provided during instantiation.                                                              | When a field should have a default value that is not changed per instance.                  |
+| `default_factory` | Accepts a zero-argument callable. Called for each new instance, providing default values that are created fresh for each instance (e.g., `list`, `dict`).    | When defaults need to be a new object for each instance, such as lists or dictionaries.     |
+| `init`            | If `True`, the field is included as a parameter in the automatically generated `__init__` method. If `False`, it is not included.                            | To control which fields are initialized via the constructor.                                |
+| `repr`            | If `True`, includes the field in the string returned by the automatically generated `__repr__` method. If `False`, excludes it.                              | To customize which fields are visible in the object’s official string representation.       |
+| `compare`         | Determines if the field should be considered when comparing objects for equality or order.                                                                   | To include or exclude fields from being used in comparison operations.                      |
+| `metadata`        | A mapping that stores information about the field that does not affect its behavior in dataclasses; purely informational and can be accessed via `fields()`. | Storing additional information about the field for external use, like annotations or hints. |
+
+These tables encapsulate the various configurations and customizations possible with Python dataclasses and their fields, providing a quick reference to understand when and how to use each keyword or attribute effectively.
 
 ### What Are Python Dataclasses?
 
