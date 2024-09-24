@@ -81,6 +81,11 @@
         - [Example Demonstrating the Differences](#example-demonstrating-the-differences-1)
         - [Key Differences Highlighted:](#key-differences-highlighted-1)
         - [Conclusion](#conclusion-1)
+    - [What is InitVar](#what-is-initvar)
+        - [Understanding `InitVar`](#understanding-initvar)
+        - [How to Use `InitVar`](#how-to-use-initvar)
+        - [Example](#example)
+        - [Summary of `InitVar`](#summary-of-initvar)
 
 <!-- markdown-toc end -->
 
@@ -1239,7 +1244,6 @@ This table highlights the operational differences and typical usage scenarios,
 helping you to decide which configuration might be better suited to your
 specific needs in Python applications.
 
-
 ## What is InitVar
 
 Ah, `InitVar` in Python dataclasses is a type specifically meant for fields that
@@ -1293,15 +1297,16 @@ print(student)  # Output will not include graduation_year, but will show graduat
 ```
 
 In this example:
+
 - `graduation_year` is provided during instantiation but isn't stored as part of the object. It's only used to compute whether the student is graduating this year.
 - The `graduating` attribute is then computed based on the `graduation_year` passed during initialization.
 
 ### Summary of `InitVar`
 
-| Aspect        | Description                                                                                                                                                          |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Purpose       | To provide additional data needed during initialization but not meant to be part of the object’s permanent state.                                                     |
-| Usage         | It is declared as `field_name: InitVar[type]` and used within the `__post_init__` method.                                                                             |
-| Common Use    | Initialization parameters that are needed to compute the actual attributes of a dataclass but do not need to be stored as part of the dataclass's persistent state. |
+| Aspect     | Description                                                                                                                                                         |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Purpose    | To provide additional data needed during initialization but not meant to be part of the object’s permanent state.                                                   |
+| Usage      | It is declared as `field_name: InitVar[type]` and used within the `__post_init__` method.                                                                           |
+| Common Use | Initialization parameters that are needed to compute the actual attributes of a dataclass but do not need to be stored as part of the dataclass's persistent state. |
 
 Using `InitVar` can help make your dataclass definitions clearer by separating temporary initialization data from the persistent state of objects, enhancing the maintainability and readability of your code.
