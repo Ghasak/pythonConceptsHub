@@ -1,10 +1,12 @@
 # Data Classes in Action
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+
 **Table of Contents**
 
 - [Data Classes in Action](#data-classes-in-action)
-    - [-](#-)
+  - [Introduction](#introduction)
+    - [Table 1: Key Dataclass Attributes and Methods](#table-1-key-dataclass-attributes-and-methods)
     - [Table 2: Keywords and Options in the `field()` Function](#table-2-keywords-and-options-in-the-field-function)
     - [What Are Python Dataclasses?](#what-are-python-dataclasses)
     - [Why Do We Need Dataclasses?](#why-do-we-need-dataclasses)
@@ -12,114 +14,177 @@
     - [Syntax of a Modern Python Dataclass](#syntax-of-a-modern-python-dataclass)
     - [Explanation of Key Features](#explanation-of-key-features)
     - [Dataclass Example vs. Regular Class Example](#dataclass-example-vs-regular-class-example)
-        - [Regular Class Example](#regular-class-example)
-        - [Dataclass Example](#dataclass-example)
-        - [Summary Table](#summary-table)
-        - [Why Do We Need `default_factory`?](#why-do-we-need-default_factory)
-        - [When to Use `default_factory`?](#when-to-use-default_factory)
-        - [How to Use `default_factory`?](#how-to-use-default_factory)
-        - [Examples of `default_factory` Usage](#examples-of-default_factory-usage)
-            - [1. **Using `default_factory` for Mutable Data Containers (List)**](#1-using-default_factory-for-mutable-data-containers-list)
-            - [2. **Using `default_factory` with a Function**](#2-using-default_factory-with-a-function)
-            - [3. **Using `default_factory` for Complex Nested Structures**](#3-using-default_factory-for-complex-nested-structures)
-            - [4. **Using `default_factory` for Lazy Initialization**](#4-using-default_factory-for-lazy-initialization)
-        - [Summary Table for `default_factory`](#summary-table-for-default_factory)
-        - [Why Do We Need `__post_init__()`?](#why-do-we-need-__post_init__)
-        - [When to Use `__post_init__()`?](#when-to-use-__post_init__)
-        - [How to Use `__post_init__()`?](#how-to-use-__post_init__)
-        - [Examples of `__post_init__()` Usage](#examples-of-__post_init__-usage)
-            - [1. **Basic Usage of `__post_init__()`**](#1-basic-usage-of-__post_init__)
-            - [2. **Using `InitVar` with `__post_init__()`**](#2-using-initvar-with-__post_init__)
-            - [3. **Handling Field Validation in `__post_init__()`**](#3-handling-field-validation-in-__post_init__)
-            - [4. **Using `__post_init__()` for Dependent Initialization**](#4-using-__post_init__-for-dependent-initialization)
-        - [Summary Table for `__post_init__()`](#summary-table-for-__post_init__)
-        - [1. `init`: Add `__init__()` Method?](#1-init-add-__init__-method)
-            - [What It Is:](#what-it-is)
-            - [Why We Need It:](#why-we-need-it)
-            - [Example:](#example)
-        - [2. `repr`: Add `__repr__()` Method?](#2-repr-add-__repr__-method)
-            - [What It Is:](#what-it-is-1)
-            - [Why We Need It:](#why-we-need-it-1)
-            - [Example:](#example-1)
-        - [3. `eq`: Add `__eq__()` Method?](#3-eq-add-__eq__-method)
-            - [What It Is:](#what-it-is-2)
-            - [Why We Need It:](#why-we-need-it-2)
-            - [Example:](#example-2)
-        - [4. `order`: Add Ordering Methods?](#4-order-add-ordering-methods)
-            - [What It Is:](#what-it-is-3)
-            - [Why We Need It:](#why-we-need-it-3)
-            - [Example:](#example-3)
-        - [5. `unsafe_hash`: Force the Addition of a `__hash__()` Method?](#5-unsafe_hash-force-the-addition-of-a-__hash__-method)
-            - [What It Is:](#what-it-is-4)
-            - [Why We Need It:](#why-we-need-it-4)
-            - [Example:](#example-4)
-        - [6. `frozen`: Make the Instance Immutable?](#6-frozen-make-the-instance-immutable)
-            - [What It Is:](#what-it-is-5)
-            - [Why We Need It:](#why-we-need-it-5)
-            - [Example:](#example-5)
-        - [Summary Table for `@dataclass()` Parameters](#summary-table-for-dataclass-parameters)
-        - [Workaround to Make Some Fields Immutable](#workaround-to-make-some-fields-immutable)
-        - [Example of Partially Immutable Dataclass](#example-of-partially-immutable-dataclass)
-        - [Another Approach: Customizing `__setattr__()`](#another-approach-customizing-__setattr__)
-        - [Summary](#summary)
-        - [Why You Can't Combine `frozen=True` and `property`/`__setattr__()`:](#why-you-cant-combine-frozentrue-and-property__setattr__)
-        - [Alternative Approach](#alternative-approach)
-        - [Example:](#example-6)
-        - [Conclusion:](#conclusion)
-        - [Explanation and Examples of Using `slots` in Dataclasses](#explanation-and-examples-of-using-slots-in-dataclasses)
-            - [What are slots?](#what-are-slots)
-            - [Using `slots=True` in Dataclasses](#using-slotstrue-in-dataclasses)
-        - [Explanation of Dataclass Field Arguments](#explanation-of-dataclass-field-arguments)
-            - [1. `init=True/False`](#1-inittruefalse)
-            - [2. `repr=True/False`](#2-reprtruefalse)
-            - [3. `default=None`](#3-defaultnone)
-            - [4. `default_factory`](#4-default_factory)
-        - [Summary Table](#summary-table-1)
-        - [Definitions and Differences](#definitions-and-differences)
-        - [Example Demonstrating the Differences](#example-demonstrating-the-differences)
-        - [Key Differences Highlighted:](#key-differences-highlighted)
-        - [Conclusion](#conclusion)
-        - [Definitions and Differences](#definitions-and-differences-1)
-        - [Example Demonstrating the Differences](#example-demonstrating-the-differences-1)
-        - [Key Differences Highlighted:](#key-differences-highlighted-1)
-        - [Conclusion](#conclusion-1)
-    - [What is InitVar](#what-is-initvar)
-        - [Understanding `InitVar`](#understanding-initvar)
-        - [How to Use `InitVar`](#how-to-use-initvar)
-        - [Example](#example)
-        - [Summary of `InitVar`](#summary-of-initvar)
+      - [Regular Class Example](#regular-class-example)
+      - [Dataclass Example](#dataclass-example)
+    - [Summary Table](#summary-table)
+    - [Why Do We Need `default_factory`?](#why-do-we-need-default_factory)
+    - [When to Use `default_factory`?](#when-to-use-default_factory)
+    - [How to Use `default_factory`?](#how-to-use-default_factory)
+    - [Examples of `default_factory` Usage](#examples-of-default_factory-usage)
+      - [1. **Using `default_factory` for Mutable Data Containers (List)**](#1-using-default_factory-for-mutable-data-containers-list)
+      - [2. **Using `default_factory` with a Function**](#2-using-default_factory-with-a-function)
+      - [3. **Using `default_factory` for Complex Nested Structures**](#3-using-default_factory-for-complex-nested-structures)
+      - [4. **Using `default_factory` for Lazy Initialization**](#4-using-default_factory-for-lazy-initialization)
+    - [Summary Table for `default_factory`](#summary-table-for-default_factory)
+    - [Why Do We Need `__post_init__()`?](#why-do-we-need-__post_init__)
+    - [When to Use `__post_init__()`?](#when-to-use-__post_init__)
+    - [How to Use `__post_init__()`?](#how-to-use-__post_init__)
+    - [Examples of `__post_init__()` Usage](#examples-of-__post_init__-usage)
+      - [1. **Basic Usage of `__post_init__()`**](#1-basic-usage-of-__post_init__)
+      - [2. **Using `InitVar` with `__post_init__()`**](#2-using-initvar-with-__post_init__)
+      - [3. **Handling Field Validation in `__post_init__()`**](#3-handling-field-validation-in-__post_init__)
+      - [4. **Using `__post_init__()` for Dependent Initialization**](#4-using-__post_init__-for-dependent-initialization)
+    - [Summary Table for `__post_init__()`](#summary-table-for-__post_init__)
+    - [1. `init`: Add `__init__()` Method?](#1-init-add-__init__-method)
+      - [What It Is:](#what-it-is)
+      - [Why We Need It:](#why-we-need-it)
+      - [Example:](#example)
+    - [2. `repr`: Add `__repr__()` Method?](#2-repr-add-__repr__-method)
+      - [What It Is:](#what-it-is-1)
+      - [Why We Need It:](#why-we-need-it-1)
+      - [Example:](#example-1)
+    - [3. `eq`: Add `__eq__()` Method?](#3-eq-add-__eq__-method)
+      - [What It Is:](#what-it-is-2)
+      - [Why We Need It:](#why-we-need-it-2)
+      - [Example:](#example-2)
+    - [4. `order`: Add Ordering Methods?](#4-order-add-ordering-methods)
+      - [What It Is:](#what-it-is-3)
+      - [Why We Need It:](#why-we-need-it-3)
+      - [Example:](#example-3)
+    - [5. `unsafe_hash`: Force the Addition of a `__hash__()` Method?](#5-unsafe_hash-force-the-addition-of-a-__hash__-method)
+      - [What It Is:](#what-it-is-4)
+      - [Why We Need It:](#why-we-need-it-4)
+      - [Example:](#example-4)
+    - [6. `frozen`: Make the Instance Immutable?](#6-frozen-make-the-instance-immutable)
+      - [What It Is:](#what-it-is-5)
+      - [Why We Need It:](#why-we-need-it-5)
+      - [Example:](#example-5)
+    - [Summary Table for `@dataclass()` Parameters](#summary-table-for-dataclass-parameters)
+    - [Workaround to Make Some Fields Immutable](#workaround-to-make-some-fields-immutable)
+    - [Example of Partially Immutable Dataclass](#example-of-partially-immutable-dataclass)
+    - [Another Approach: Customizing `__setattr__()`](#another-approach-customizing-__setattr__)
+    - [Summary](#summary)
+    - [Why You Can't Combine `frozen=True` and `property`/`__setattr__()`:](#why-you-cant-combine-frozentrue-and-property__setattr__)
+    - [Alternative Approach](#alternative-approach)
+    - [Example:](#example-6)
+    - [Conclusion:](#conclusion)
+    - [Explanation and Examples of Using `slots` in Dataclasses](#explanation-and-examples-of-using-slots-in-dataclasses)
+      - [What are slots?](#what-are-slots)
+      - [Using `slots=True` in Dataclasses](#using-slotstrue-in-dataclasses)
+    - [Explanation of Dataclass Field Arguments](#explanation-of-dataclass-field-arguments)
+      - [1. `init=True/False`](#1-inittruefalse)
+      - [2. `repr=True/False`](#2-reprtruefalse)
+      - [3. `default=None`](#3-defaultnone)
+      - [4. `default_factory`](#4-default_factory)
+    - [Summary Table](#summary-table-1)
+    - [Definitions and Differences](#definitions-and-differences)
+    - [Example Demonstrating the Differences](#example-demonstrating-the-differences)
+    - [Key Differences Highlighted:](#key-differences-highlighted)
+    - [Conclusion](#conclusion)
+    - [Definitions and Differences](#definitions-and-differences-1)
+    - [Example Demonstrating the Differences](#example-demonstrating-the-differences-1)
+    - [Key Differences Highlighted:](#key-differences-highlighted-1)
+    - [Conclusion](#conclusion-1)
+  - [What is InitVar](#what-is-initvar)
+    - [Understanding `InitVar`](#understanding-initvar)
+    - [How to Use `InitVar`](#how-to-use-initvar)
+    - [Example](#example)
+    - [Summary of `InitVar`](#summary-of-initvar)
+  - [Hash in dataclasses](#hash-in-dataclasses)
+    - [Example of Using `hash` in Dataclasses](#example-of-using-hash-in-dataclasses)
+    - [Explanation](#explanation)
+    - [Example 1: Using `hash=True`](#example-1-using-hashtrue)
+    - [Example 2: Using `hash=False`](#example-2-using-hashfalse)
+    - [Explanation and Effects:](#explanation-and-effects)
+    - [Example Dataclass Definitions and Usage](#example-dataclass-definitions-and-usage)
+      - [Dataclass with `hash=True`](#dataclass-with-hashtrue)
+      - [Dataclass with `hash=False`](#dataclass-with-hashfalse)
+    - [Expected Outputs](#expected-outputs)
+    - [Table 1: Attributes for the `@dataclass` Decorator](#table-1-attributes-for-the-dataclass-decorator)
+    - [Table 2: Keywords and Options in the `field()` Function](#table-2-keywords-and-options-in-the-field-function-1)
+    - [Dataclass Template with All Features](#dataclass-template-with-all-features)
+  - [Template - Boilerplate](#template---boilerplate)
+    - [Updated Dataclass with `InitVar`](#updated-dataclass-with-initvar)
+    - [Explanation of Changes](#explanation-of-changes)
+    - [1. **Dataclass Decorators**](#1-dataclass-decorators)
+    - [2. **Field Specifications**](#2-field-specifications)
+    - [3. **Automatic and Custom Initialization**](#3-automatic-and-custom-initialization)
+    - [4. **Property Decorators**](#4-property-decorators)
+    - [5. **Immutability with Mutation Methods**](#5-immutability-with-mutation-methods)
+    - [6. **Serialization and Factory Methods**](#6-serialization-and-factory-methods)
+    - [7. **Rich Output and String Representation**](#7-rich-output-and-string-representation)
+    - [8. **Enhanced Usability**](#8-enhanced-usability)
+    - [Summary](#summary-1)
 
 <!-- markdown-toc end -->
+
+## Introduction
 
 A comprehensive overview of key concepts and attributes
 associated with Python dataclasses, including those used within the `field()`
 function and others that are essential for defining and customizing dataclasses.
 
-### Table 1: Key Dataclass Attributes and Methods
+- Below are two comprehensive tables detailing the attributes available in the
+  Python `@dataclass` decorator and the `field()` function for dataclass fields.
+  These tables include descriptions, benefits, and typical use cases to help you
+  integrate these features effectively in your development work.
 
-| Keyword         | Description                                                                                                                                                               | Use Cases                                                        |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `slots`         | Adds `__slots__` attribute to automatically generated class to reduce memory usage by preventing the creation of `__dict__` and `__weakref__` per instance.               | When managing memory is crucial, especially with many instances. |
-| `InitVar`       | Type hint for fields that are used only during initialization (in `__post_init__`). These fields do not become part of the object’s instance state.                       | Temporary variables needed for initialization but not stored.    |
-| `__post_init__` | A special method that gets called immediately after the generated `__init__` method. Useful for additional initialization that can't be handled in the field definitions. | Setting up instance variables that depend on other fields.       |
-| `init`          | Specifies if the field should be included as a parameter to the generated `__init__` method.                                                                              | Controlling the fields that are initialized directly.            |
-| `factory`       | A common misreference, usually meant to indicate `default_factory`, which sets a callable to provide a default value for a field, called for each new instance.           | To provide default values that are mutable or complex objects.   |
-| `repr`          | Determines whether the field should be included in the automatically generated `__repr__` method of the dataclass.                                                        | Customizing object representation for debugging and logging.     |
-| `default`       | Provides a default value for a field. This value is shared among all instances, unless a new value is specified during instantiation.                                     | Setting static default values for fields.                        |
-| `init` in field | Attribute in `field()` that can be set to True or False to include or exclude the field from the generated `__init__` method.                                             | To include/exclude fields from automatic constructor.            |
+### Table 1: Attributes for the `@dataclass` Decorator
+
+| Attribute     | Description                                                                       | Benefits                                                                                         | Use Cases                                                            |
+| ------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| `init`        | Automatically generate an `__init__()` method.                                    | Simplifies initialization of dataclasses.                                                        | When you need an automatic constructor.                              |
+| `repr`        | Automatically generate a `__repr__()` method.                                     | Eases debugging by providing a readable string representation.                                   | When you need a simple way to print dataclass objects for debugging. |
+| `eq`          | Automatically generate an `__eq__()` method.                                      | Allows object comparison using `==`.                                                             | When you need to compare dataclass instances.                        |
+| `order`       | Automatically generate ordering methods (`__lt__`, `__le__`, `__gt__`, `__ge__`). | Enables object ordering and comparisons.                                                         | When objects need to be sortable or compared.                        |
+| `unsafe_hash` | Force the generation of a `__hash__()` method even if `__eq__` is defined.        | Enables objects to be used as dictionary keys or set members, even when custom equality is used. | When `eq` is True but you still need a hash method.                  |
+| `frozen`      | Make instances immutable after creation.                                          | Prevents modification after initialization, ensuring hash consistency.                           | When object immutability is needed (similar to tuples).              |
 
 ### Table 2: Keywords and Options in the `field()` Function
 
-| Field Attribute   | Description                                                                                                                                                  | When It's Used                                                                              |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
-| `default`         | Sets a default value for the field, which is used if no value is provided during instantiation.                                                              | When a field should have a default value that is not changed per instance.                  |
-| `default_factory` | Accepts a zero-argument callable. Called for each new instance, providing default values that are created fresh for each instance (e.g., `list`, `dict`).    | When defaults need to be a new object for each instance, such as lists or dictionaries.     |
-| `init`            | If `True`, the field is included as a parameter in the automatically generated `__init__` method. If `False`, it is not included.                            | To control which fields are initialized via the constructor.                                |
-| `repr`            | If `True`, includes the field in the string returned by the automatically generated `__repr__` method. If `False`, excludes it.                              | To customize which fields are visible in the object’s official string representation.       |
-| `compare`         | Determines if the field should be considered when comparing objects for equality or order.                                                                   | To include or exclude fields from being used in comparison operations.                      |
-| `metadata`        | A mapping that stores information about the field that does not affect its behavior in dataclasses; purely informational and can be accessed via `fields()`. | Storing additional information about the field for external use, like annotations or hints. |
+| Field Attribute   | Description                                                                                                      | Benefits                                                                  | When It's Used                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `default`         | Sets a default value for the field, which is used if no value is provided during instantiation.                  | Provides a convenient way to set a default without using `__post_init__`. | When a field should have a default value.                                       |
+| `default_factory` | Accepts a callable that returns the default value for the field; called for each new instance.                   | Ensures unique default values for mutable types like lists or dicts.      | When default needs to be a mutable type like a list or a dictionary.            |
+| `init`            | If `True`, include the field as a parameter in the `__init__()` method; if `False`, exclude it.                  | Allows exclusion of fields from the initialization method.                | To exclude fields from the automatic constructor.                               |
+| `repr`            | If `True`, include the field in the string returned by the `__repr__()` method; if `False`, exclude it.          | Controls visibility in the object's representation.                       | To customize the object’s official string representation.                       |
+| `compare`         | If `True`, include the field in comparisons of the object; if `False`, exclude it.                               | Controls which fields affect object comparison.                           | To include/exclude fields from being used in comparison operations.             |
+| `hash`            | If `True`, include the field in the hash value; if `False`, exclude it; if `None`, use the setting of `compare`. | Determines field inclusion in hash calculations.                          | To control which fields contribute to the object's hash value.                  |
+| `metadata`        | A mapping that stores arbitrary information about the field. Does not affect the field’s behavior directly.      | Useful for storing extra information about the field.                     | For annotations or additional metadata that does not affect dataclass behavior. |
 
-These tables encapsulate the various configurations and customizations possible with Python dataclasses and their fields, providing a quick reference to understand when and how to use each keyword or attribute effectively.
+### Dataclass Template with All Features
+
+This template includes use of various `@dataclass` and `field()` attributes for
+a hypothetical `Employee` class, demonstrating a possible configuration you can
+start from and adapt based on your specific requirements.
+
+```python
+from dataclasses import dataclass, field
+from typing import List
+
+def default_id():
+    return 1
+
+@dataclass(order=True, frozen=True)
+class Employee:
+    id: int = field(default_factory=default_id, init=True, repr=True, compare=True, hash=True)
+    name: str = field(init=True, repr=True, compare=False, hash=False)
+    skills: List[str] = field(default_factory=list, repr=True, compare=False, hash=False)
+    age: int = field(default=None, repr=True, compare=True, hash=True, metadata={'unit': 'years'})
+
+# Example usage
+if __name__ == "__main__":
+    emp1 = Employee(name="Alice")
+    emp2 = Employee(id=2, name="Bob", skills=["Python", "Data Analysis"])
+    print(emp1)
+    print(emp2)
+    print(emp1 == emp2)
+```
+
+This template effectively utilizes the `dataclass` and `field` features,
+providing a robust starting point for defining classes with various custom
+behaviors in terms of initialization, representation, comparison, and
+immutability. Adjust the attributes and methods as needed for your application.
 
 ### What Are Python Dataclasses?
 
@@ -438,15 +503,22 @@ you need to perform computations that depend on multiple fields.
 
 ### When to Use `__post_init__()`?
 
-- **Post-constructor initialization**: When additional initialization or validation is required after the default `__init__()` is run.
-- **Working with `InitVar`**: You can handle `InitVar` variables (those that are passed during initialization but are not stored as attributes) in `__post_init__()`.
-- **Dependent computations**: If certain attributes need to be set or computed based on the values of other fields, `__post_init__()` is a good place to do that.
+- **Post-constructor initialization**: When additional initialization or
+  validation is required after the default `__init__()` is run.
+- **Working with `InitVar`**: You can handle `InitVar` variables (those that are
+  passed during initialization but are not stored as attributes) in
+  `__post_init__()`.
+- **Dependent computations**: If certain attributes need to be set or computed
+  based on the values of other fields, `__post_init__()` is a good place to do
+  that.
 
 ---
 
 ### How to Use `__post_init__()`?
 
-You define a `__post_init__()` method within your dataclass. This method is automatically called right after the `__init__()` method, allowing you to add any logic you want.
+You define a `__post_init__()` method within your dataclass. This method is
+automatically called right after the `__init__()` method, allowing you to add
+any logic you want.
 
 ---
 
@@ -576,11 +648,16 @@ Let me know if you'd like more detailed examples or have other questions about d
 
 #### What It Is:
 
-The `init` parameter controls whether the `__init__()` method should be auto-generated for your dataclass. If set to `True` (the default), the dataclass will generate an `__init__()` method based on the fields defined in the class.
+The `init` parameter controls whether the `__init__()` method should be
+auto-generated for your dataclass. If set to `True` (the default), the dataclass
+will generate an `__init__()` method based on the fields defined in the class.
 
 #### Why We Need It:
 
-In most cases, we want dataclasses to auto-generate the `__init__()` method, saving us the trouble of manually writing it. However, there are cases where you may want to manage the initialization yourself (e.g., when more complex logic is required or when using another design pattern).
+In most cases, we want dataclasses to auto-generate the `__init__()` method,
+saving us the trouble of manually writing it. However, there are cases where you
+may want to manage the initialization yourself (e.g., when more complex logic is
+required or when using another design pattern).
 
 #### Example:
 
@@ -615,11 +692,16 @@ print(car_manual)  # Output: CarManualInit(make='Toyota', model='Corolla')
 
 #### What It Is:
 
-The `repr` parameter controls whether a `__repr__()` method should be auto-generated for your dataclass. This method returns a string that represents the object in a readable way, useful for debugging or logging.
+The `repr` parameter controls whether a `__repr__()` method should be
+auto-generated for your dataclass. This method returns a string that represents
+the object in a readable way, useful for debugging or logging.
 
 #### Why We Need It:
 
-Having a good `__repr__()` method makes it easier to inspect and debug objects. However, in cases where you want to hide certain fields or provide a custom representation, you can set `repr=False` or manually define your own `__repr__()` method.
+Having a good `__repr__()` method makes it easier to inspect and debug objects.
+However, in cases where you want to hide certain fields or provide a custom
+representation, you can set `repr=False` or manually define your own
+`__repr__()` method.
 
 #### Example:
 
@@ -648,11 +730,15 @@ print(emp_conf)  # Output: <__main__.ConfidentialEmployee object at 0x...>
 
 #### What It Is:
 
-The `eq` parameter controls whether the dataclass should auto-generate the `__eq__()` method, which compares two objects for equality. By default, it checks whether the values of all the fields are the same between two instances.
+The `eq` parameter controls whether the dataclass should auto-generate the
+`__eq__()` method, which compares two objects for equality. By default, it
+checks whether the values of all the fields are the same between two instances.
 
 #### Why We Need It:
 
-The `__eq__()` method is useful for checking equality between instances. In certain cases, you may not want equality to depend on all fields, or you may want to implement a custom equality method.
+The `__eq__()` method is useful for checking equality between instances. In
+certain cases, you may not want equality to depend on all fields, or you may
+want to implement a custom equality method.
 
 #### Example:
 
@@ -857,7 +943,8 @@ changed.
 
 ### Another Approach: Customizing `__setattr__()`
 
-If you want more control and flexibility, you can override the `__setattr__()` method to enforce immutability only for specific fields.
+If you want more control and flexibility, you can override the `__setattr__()`
+method to enforce immutability only for specific fields.
 
 ```python
 from dataclasses import dataclass
@@ -883,7 +970,8 @@ print(emp.name)  # Output: Bob
 # emp.id = 2  # Raises: AttributeError: id is immutable.
 ```
 
-This approach allows you to enforce immutability selectively by intercepting assignments to specific fields.
+This approach allows you to enforce immutability selectively by intercepting
+assignments to specific fields.
 
 ---
 
@@ -1330,8 +1418,11 @@ print(student)  # Output will not include graduation_year, but will show graduat
 
 In this example:
 
-- `graduation_year` is provided during instantiation but isn't stored as part of the object. It's only used to compute whether the student is graduating this year.
-- The `graduating` attribute is then computed based on the `graduation_year` passed during initialization.
+- `graduation_year` is provided during instantiation but isn't stored as part of
+  the object. It's only used to compute whether the student is graduating this
+  year.
+- The `graduating` attribute is then computed based on the `graduation_year`
+  passed during initialization.
 
 ### Summary of `InitVar`
 
@@ -1341,4 +1432,445 @@ In this example:
 | Usage      | It is declared as `field_name: InitVar[type]` and used within the `__post_init__` method.                                                                           |
 | Common Use | Initialization parameters that are needed to compute the actual attributes of a dataclass but do not need to be stored as part of the dataclass's persistent state. |
 
-Using `InitVar` can help make your dataclass definitions clearer by separating temporary initialization data from the persistent state of objects, enhancing the maintainability and readability of your code.
+Using `InitVar` can help make your dataclass definitions clearer by separating
+temporary initialization data from the persistent state of objects, enhancing
+the maintainability and readability of your code.
+
+## Hash in dataclasses
+
+Here we will provide an example of a dataclass where the `hash` attribute is
+explicitly used, and demonstrate how it impacts the behavior of the class in
+hashed collections like sets and dictionaries.
+
+### Example of Using `hash` in Dataclasses
+
+We will create a dataclass for `Person` where each person has a unique
+identifier (`id`). We'll use this `id` for hashing and comparisons, but other
+fields like `name` will be excluded from these operations.
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass(frozen=True)
+class Person:
+    id: int
+    name: str = field(compare=False, hash=False, repr=True)
+
+# Creating a set of Person objects
+if __name__ == "__main__":
+    person1 = Person(id=1, name="Alice")
+    person2 = Person(id=1, name="Alice")
+    person3 = Person(id=2, name="Bob")
+
+    # Adding to a set to see hash and equality behavior
+    people_set = {person1, person2, person3}
+    print(people_set)  # Expected: {Person(id=1, name='Alice'), Person(id=2, name='Bob')}
+
+    # Creating a dictionary to use persons as keys
+    person_dict = {person1: "Data for Alice", person3: "Data for Bob"}
+    print(person_dict[person1])  # Output: "Data for Alice"
+    print(person_dict[person2])  # Output: "Data for Alice" since person1 and person2 are considered the same based on id
+```
+
+### Explanation
+
+1. **Dataclass Definition**:
+
+   - `Person` is defined with `id` as a field that participates in hashing and
+     equality checks (by default, as we haven't specified otherwise).
+   - The `name` field has `compare=False` and `hash=False`, meaning it doesn't
+     affect the equality comparisons or the hash value of the instances.
+
+2. **Set Behavior**:
+
+   - `person1` and `person2` are considered the same in the set because they
+     have the same `id`, even though all other attributes are the same too. If
+     you change the `id`, you'll see different behavior.
+   - `person3` is different due to a different `id`.
+
+3. **Dictionary Key Usage**:
+   - Persons are used as keys in a dictionary. Because `person1` and `person2`
+     have the same `id` and thus the same hash value, they are treated as the
+     same key, so `person_dict[person2]` accesses the same item as
+     `person_dict[person1]`.
+
+This example illustrates how the `hash` setting can be used to control which
+fields contribute to the object's identity in contexts where hashing is
+relevant, such as sets and dictionaries. This is crucial for ensuring correct
+and expected behaviors in data structures relying on hash-based mechanisms.
+
+Let's create two examples where we explicitly set `hash=True` and `hash=False`
+for specific fields in a dataclass, and then observe how these settings affect
+behavior when objects are used in sets and dictionaries.
+
+### Example 1: Using `hash=True`
+
+In this example, we will define a dataclass where a specific field contributes to the hash value.
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass(frozen=True)
+class Product:
+    id: int
+    name: str
+    price: float = field(compare=False, hash=True)  # Using hash=True explicitly
+
+# Testing in main
+if __name__ == "__main__":
+    product1 = Product(id=101, name="Coffee", price=15.99)
+    product2 = Product(id=101, name="Coffee", price=15.99)
+    product3 = Product(id=102, name="Tea", price=10.99)
+
+    # Adding to a set
+    product_set = {product1, product2, product3}
+    print(product_set)  # Should print both products as the 'id' and 'price' are the same for product1 and product2
+
+    # Using as dictionary keys
+    product_dict = {product1: "Available", product3: "Out of stock"}
+    print(product_dict[product2])  # Should output 'Available' as product2 is considered the same as product1
+```
+
+### Example 2: Using `hash=False`
+
+In this next example, we'll define a dataclass where a field is explicitly excluded from contributing to the hash.
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass(frozen=True)
+class Employee:
+    id: int
+    name: str = field(compare=True, hash=False)  # hash=False to exclude from hash computations
+
+# Testing in main
+if __name__ == "__main__":
+    employee1 = Employee(id=1, name="Alice")
+    employee2 = Employee(id=1, name="Alice")
+    employee3 = Employee(id=2, name="Bob")
+
+    # Adding to a set
+    employee_set = {employee1, employee2, employee3}
+    print(employee_set)  # Should show Alice once and Bob once, even though name does not affect the hash
+
+    # Using as dictionary keys
+    employee_dict = {employee1: "Developer", employee3: "Manager"}
+    print(employee_dict[employee2])  # Outputs 'Developer' since employee1 and employee2 have the same ID
+```
+
+### Explanation and Effects:
+
+- **Example 1 (`hash=True`)**: The `price` field, although typically not used
+  for identity, is included in hash computations. Both `product1` and `product2`
+  are treated as the same in sets and dictionaries due to having identical `id`
+  and `price`.
+- **Example 2 (`hash=False`)**: The `name` field in `Employee` does not affect
+  the hash value, so even if two employees have the same name but different IDs,
+  they would be treated as different objects. However, in this example, because
+  we haven't altered the ID and it is the only attribute contributing to the
+  hash, `employee1` and `employee2` are still treated as identical.
+
+These examples demonstrate the flexibility you have with Python's dataclasses to
+tailor the behavior of objects concerning how they are stored and retrieved from
+data structures that depend on hashing, like sets and dictionaries.
+
+Absolutely, let's clarify and unify the example with two similar dataclass
+definitions, where one uses `hash=True` and the other uses `hash=False`. We will
+then observe the effects when these objects are placed in sets and dictionaries.
+
+### Example Dataclass Definitions and Usage
+
+#### Dataclass with `hash=True`
+
+In this example, a field contributes to the hash value explicitly.
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass(frozen=True)
+class Item:
+    id: int
+    name: str = field(compare=False, hash=True)  # Hash explicitly included for `name`
+
+# Testing in main
+if __name__ == "__main__":
+    item1 = Item(id=1, name="Pen")
+    item2 = Item(id=1, name="Pen")
+    item3 = Item(id=1, name="Pencil")
+
+    # Adding to a set
+    item_set = {item1, item2, item3}
+    print(item_set)  # Output will show 'Pen' once and 'Pencil' once because name affects hash
+
+    # Using as dictionary keys
+    item_dict = {item1: "Stationery", item3: "Art Supplies"}
+    print(item_dict[item2])  # Outputs 'Stationery' because item2 is considered the same as item1
+```
+
+#### Dataclass with `hash=False`
+
+In the next example, the field is excluded from contributing to the hash.
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass(frozen=True)
+class Item:
+    id: int
+    name: str = field(compare=False, hash=False)  # Hash explicitly excluded for `name`
+
+# Testing in main
+if __name__ == "__main__":
+    item1 = Item(id=1, name="Pen")
+    item2 = Item(id=1, name="Pen")
+    item3 = Item(id=1, name="Pencil")
+
+    # Adding to a set
+    item_set = {item1, item2, item3}
+    print(item_set)  # Output will show 'Pen' twice and 'Pencil' once because name does not affect hash
+
+    # Using as dictionary keys
+    item_dict = {item1: "Stationery", item3: "Art Supplies"}
+    print(item_dict[item2])  # Outputs 'Stationery' because item2 is considered the same as item1 by ID
+```
+
+### Expected Outputs
+
+- **First Example (`hash=True`)**:
+
+  - The output for the set will be something like `{Item(id=1, name='Pen'), Item(id=1, name='Pencil')}`, as `name` contributes to the hash and `Pencil`
+    is treated as a different entry despite the same `id`.
+  - The dictionary access `print(item_dict[item2])` will output `'Stationery'`
+    because `item2` is identical to `item1` based on both `id` and `name`.
+
+- **Second Example (`hash=False`)**:
+  - The output for the set will show something like `{Item(id=1, name='Pen'), Item(id=1, name='Pen'), Item(id=1, name='Pencil')}`, displaying multiple
+    entries for 'Pen' because `name` does not contribute to the hash.
+  - The dictionary access will still treat `item2` as identical to `item1`, as
+    hashing defaults to using `id` only.
+
+This illustration should clearly demonstrate how the `hash` attribute affects
+the behavior of dataclass objects when used in hashed data structures.
+
+---
+
+Below are two comprehensive tables detailing the attributes available in the
+Python `@dataclass` decorator and the `field()` function for dataclass fields.
+These tables include descriptions, benefits, and typical use cases to help you
+integrate these features effectively in your development work.
+
+### Table 1: Attributes for the `@dataclass` Decorator
+
+| Attribute     | Description                                                                       | Benefits                                                                                         | Use Cases                                                            |
+| ------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| `init`        | Automatically generate an `__init__()` method.                                    | Simplifies initialization of dataclasses.                                                        | When you need an automatic constructor.                              |
+| `repr`        | Automatically generate a `__repr__()` method.                                     | Eases debugging by providing a readable string representation.                                   | When you need a simple way to print dataclass objects for debugging. |
+| `eq`          | Automatically generate an `__eq__()` method.                                      | Allows object comparison using `==`.                                                             | When you need to compare dataclass instances.                        |
+| `order`       | Automatically generate ordering methods (`__lt__`, `__le__`, `__gt__`, `__ge__`). | Enables object ordering and comparisons.                                                         | When objects need to be sortable or compared.                        |
+| `unsafe_hash` | Force the generation of a `__hash__()` method even if `__eq__` is defined.        | Enables objects to be used as dictionary keys or set members, even when custom equality is used. | When `eq` is True but you still need a hash method.                  |
+| `frozen`      | Make instances immutable after creation.                                          | Prevents modification after initialization, ensuring hash consistency.                           | When object immutability is needed (similar to tuples).              |
+
+### Table 2: Keywords and Options in the `field()` Function
+
+| Field Attribute   | Description                                                                                                      | Benefits                                                                  | When It's Used                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `default`         | Sets a default value for the field, which is used if no value is provided during instantiation.                  | Provides a convenient way to set a default without using `__post_init__`. | When a field should have a default value.                                       |
+| `default_factory` | Accepts a callable that returns the default value for the field; called for each new instance.                   | Ensures unique default values for mutable types like lists or dicts.      | When default needs to be a mutable type like a list or a dictionary.            |
+| `init`            | If `True`, include the field as a parameter in the `__init__()` method; if `False`, exclude it.                  | Allows exclusion of fields from the initialization method.                | To exclude fields from the automatic constructor.                               |
+| `repr`            | If `True`, include the field in the string returned by the `__repr__()` method; if `False`, exclude it.          | Controls visibility in the object's representation.                       | To customize the object’s official string representation.                       |
+| `compare`         | If `True`, include the field in comparisons of the object; if `False`, exclude it.                               | Controls which fields affect object comparison.                           | To include/exclude fields from being used in comparison operations.             |
+| `hash`            | If `True`, include the field in the hash value; if `False`, exclude it; if `None`, use the setting of `compare`. | Determines field inclusion in hash calculations.                          | To control which fields contribute to the object's hash value.                  |
+| `metadata`        | A mapping that stores arbitrary information about the field. Does not affect the field’s behavior directly.      | Useful for storing extra information about the field.                     | For annotations or additional metadata that does not affect dataclass behavior. |
+
+### Dataclass Template with All Features
+
+This template includes use of various `@dataclass` and `field()` attributes for
+a hypothetical `Employee` class, demonstrating a possible configuration you can
+start from and adapt based on your specific requirements.
+
+```python
+from dataclasses import dataclass, field
+from typing import List
+
+def default_id():
+    return 1
+
+@dataclass(order=True, frozen=True)
+class Employee:
+    id: int = field(default_factory=default_id, init=True, repr=True, compare=True, hash=True)
+    name: str = field(init=True, repr=True, compare=False, hash=False)
+    skills: List[str] = field(default_factory=list, repr=True, compare=False, hash=False)
+    age: int = field(default=None, repr=True, compare=True, hash=True, metadata={'unit': 'years'})
+
+# Example usage
+if __name__ == "__main__":
+    emp1 = Employee(name="Alice")
+    emp2 = Employee(id=2, name="Bob", skills=["Python", "Data Analysis"])
+    print(emp1)
+    print(emp2)
+    print(emp1 == emp2)
+```
+
+This template effectively utilizes the `dataclass` and `field` features,
+providing a robust starting point for defining classes with various custom
+behaviors in terms of initialization, representation, comparison, and
+immutability. Adjust the attributes and methods as needed for your application.
+
+---
+
+## Template - Boilerplate
+
+Let's integrate `InitVar` into the `Employee`
+dataclass. `InitVar` fields are typically used for initialization purposes and
+do not become part of the object's state. This can be useful for input
+validation, computing derived properties, or other setup tasks that should not
+impact the serialized or compared state of the instance.
+
+### Updated Dataclass with `InitVar`
+
+Here, we'll use `InitVar` to provide an optional initialization message or
+configuration detail that can be logged or processed during instantiation but
+won't be stored with the object.
+
+```python
+from dataclasses import dataclass, field, InitVar, asdict, astuple
+from typing import List, Optional
+
+def default_id():
+    return 1
+
+@dataclass(order=True, frozen=True)
+class Employee:
+    id: int = field(default_factory=default_id, init=True, repr=True, compare=True, hash=True)
+    name: str = field(init=True, repr=True, compare=False, hash=False)
+    skills: List[str] = field(default_factory=list, repr=True, compare=False, hash=False)
+    age: Optional[int] = field(default=None, repr=True, compare=True, hash=True, metadata={'unit': 'years'})
+    initialization_log: InitVar[Optional[str]] = None  # This will not be part of the persistent state
+
+    def __post_init__(self, initialization_log: Optional[str]):
+        object.__setattr__(self, 'name', self.name.title())  # Enforce name to be title case
+        if self.age is not None and (self.age < 0 or self.age > 120):
+            raise ValueError("Invalid age value: Age must be between 0 and 120.")
+
+        # Log the initialization detail if provided
+        if initialization_log:
+            print(f"Initializing Employee: {initialization_log}")
+
+    @property
+    def info(self):
+        return f"{self.name}, {self.age} years old, working with skills: {', '.join(self.skills)}"
+
+    def add_skill(self, skill: str):
+        if isinstance(skill, str) and skill not in self.skills:
+            new_skills = self.skills + [skill]
+            object.__setattr__(self, 'skills', new_skills)
+
+    def __str__(self):
+        return f"Employee {self.id}: {self.info}"
+
+    @staticmethod
+    def from_dict(data):
+        return Employee(**data)
+
+    @classmethod
+    def from_employee(cls, employee):
+        return cls(id=employee.id, name=employee.name, skills=employee.skills.copy(), age=employee.age)
+
+# Example usage
+if __name__ == "__main__":
+    emp1 = Employee(name="alice", age=30, initialization_log="Created for project A")
+    emp2 = Employee(id=2, name="bob", skills=["Python", "Data Analysis"], age=25)
+    print(emp1)
+    print(emp2)
+
+    emp1.add_skill("Leadership")
+    print(emp1)
+
+    emp3 = Employee.from_dict({'name': 'Carol', 'age': 32})
+    print(emp3)
+
+    emp4 = Employee.from_employee(emp1)
+    print(emp4)
+```
+
+### Explanation of Changes
+
+- **`initialization_log: InitVar[Optional[str]]`**: This field is declared as an
+  `InitVar`, which means it can be passed to the constructor but does not become
+  part of the instance's field data. It's a transient parameter used for
+  additional logging or setup during instantiation.
+- **Updated `__post_init__`**: Now accepts `initialization_log` as a parameter
+  and logs this during object creation if provided. This allows for dynamic
+  handling of initialization context or messaging.
+
+This modification makes the `Employee` class even more versatile by allowing for
+contextual initialization while keeping the internal state clean of any
+temporary or setup-specific data.
+
+The enhanced `Employee` dataclass integrates several advanced programming
+concepts and Python features. Here are the key features of the class:
+
+### 1. **Dataclass Decorators**
+
+- **Frozen**: The `frozen=True` parameter makes instances of the class immutable
+  after creation. This immutability is essential for ensuring objects are
+  hashable and can be safely used as keys in dictionaries or elements in sets.
+
+### 2. **Field Specifications**
+
+- **Custom Fields**: Fields are customized with parameters like `init`, `repr`,
+  `compare`, and `hash` to precisely control their behavior in object lifecycle
+  operations—construction, representation, comparison, and hashing.
+- **InitVar**: Utilizes `InitVar` for the `initialization_log`, which allows
+  passing additional initialization data that does not persist as part of the
+  object's state, used primarily for logging or initialization checks.
+
+### 3. **Automatic and Custom Initialization**
+
+- **`__post_init__` Method**: Automates post-initialization processes like input
+  validation and setting properties that require custom logic, such as
+  capitalizing names and validating age constraints.
+- **Temporary Initialization Data**: Handles non-persistent data for
+  initialization which is not stored with the object, demonstrating how to
+  manage temporary context data.
+
+### 4. **Property Decorators**
+
+- **Computed Properties**: Implements the `info` property to provide a formatted
+  description of the employee, combining multiple fields into a readable string.
+  This method showcases how to use `@property` to create read-only properties
+  that compute their values dynamically.
+
+### 5. **Immutability with Mutation Methods**
+
+- **Controlled Mutation**: Despite the class being frozen, it provides a method
+  `add_skill` to append skills to the employee. This method circumvents
+  immutability constraints by creating a new list and setting it, demonstrating
+  a pattern to modify `frozen` dataclass fields.
+
+### 6. **Serialization and Factory Methods**
+
+- **Conversion Utilities**: Implements methods like `from_dict` and
+  `from_employee` to facilitate creating instances from different data sources
+  (dictionaries or other instances), enhancing the dataclass’s flexibility and
+  usability in various contexts.
+
+### 7. **Rich Output and String Representation**
+
+- **Custom String Representation**: Overridden `__str__` method to provide a
+  meaningful string output that uses the computed `info` property, making the
+  class more informative and easier to debug.
+
+### 8. **Enhanced Usability**
+
+- **Error Handling**: Incorporates error checks within `__post_init__` to ensure
+  that the employee's age is within a realistic range, preventing invalid data
+  at the point of object creation.
+
+### Summary
+
+The `Employee` dataclass effectively demonstrates advanced usage of Python's
+dataclass features to create a robust, immutable, and well-encapsulated class.
+It's designed to handle complex initialization, ensure data integrity, and
+provide convenient methods for object management and interaction, making it
+suitable for sophisticated software systems where such behaviors are beneficial.
