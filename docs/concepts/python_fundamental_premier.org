@@ -3,19 +3,19 @@
 To create a comprehensive learning agenda for Python, covering everything from the basics to advanced topics, here's an outline broken down into sections:
 
 * Python Learning Agenda
-** 1. Basics of Python [60%] [3/5]
+** 1. Basics of Python [100%] [12/12]
    - [X]  Syntax and Structure: Introduction to Python syntax, indentation, and basic constructs.
    - [X]  Variables and Data Types: Integers, floats, strings, booleans.
    - [X]  Operators:
-     - [X]  Arithmetic, comparison, logical, bitwise, and assignment operators.
-   - [ ] Control Flow:
-     - [ ]  If-else statements.
-     - [ ]  Loops: `for`, `while`, `break`, `continue`, `else`, `pass`.
-   - [ ]  Functions:
-     - [ ]  Defining and calling functions.
-     - [ ]  Parameters and arguments.
-     - [ ]  Default arguments, keyword arguments, and `*args`, `**kwargs`.
-     - [ ]  Return values and scope.
+   - [X]  Arithmetic, comparison, logical, bitwise, and assignment operators.
+   - [X]  Control Flow:
+   - [X]  If-else statements.
+   - [X]  Loops: `for`, `while`, `break`, `continue`, `else`, `pass`.
+   - [X]  Functions:
+   - [X]  Defining and calling functions.
+   - [X]  Parameters and arguments.
+   - [X]  Default arguments, keyword arguments, and `*args`, `**kwargs`.
+   - [X]  Return values and scope.
 
 ** 2. Data Containers and Structures
    - [ ]  Strings:
