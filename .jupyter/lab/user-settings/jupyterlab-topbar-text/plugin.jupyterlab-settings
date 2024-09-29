@@ -1,0 +1,10 @@
+{
+    // Top Bar Text
+    // jupyterlab-topbar-text:plugin
+    // Top Bar Text
+    // *****************************
+
+    // Text
+    // Text to display
+    "text": "Car WebScrapping Project"
+}

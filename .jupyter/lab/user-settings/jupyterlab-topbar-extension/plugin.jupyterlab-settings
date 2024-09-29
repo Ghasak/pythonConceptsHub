@@ -1,0 +1,14 @@
+{
+    // Top Bar Extension
+    // jupyterlab-topbar-extension:plugin
+    // Top Bar Extension
+    // **********************************
+
+    // Items Order
+    // Ordered list of the Top Bar items
+    "order": [
+        "spacer",
+        "memory",
+        "cpu"
+    ]
+}

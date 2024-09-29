@@ -1118,6 +1118,23 @@ Here’s a typical process where you would use `--skip-lock`:
 | Lock dependencies later                | `pipenv lock`                             | After testing or verifying the environment, lock the dependencies            |
 | Check installed dependency graph       | `pipenv graph`                            | View installed dependencies after using `--skip-lock` to check for conflicts |
 
-The `--skip-lock` flag is a useful tool for quick installs, development work,
+The `--skip-lock** flag is a useful tool for quick installs, development work,
 and testing, but you should always lock your dependencies once you’ve confirmed
 the environment is stable and ready for production or sharing.
+
+## TroubleShooting 
+
+**NOTE**: It seems that we have to use the `pipenv` command to ensure all the
+libraries goes to the `Pipfile.lock`, if you mix commands such as using `pipen
+install library_name` and `pipenv run pip install library_name`, you will ended
+up having some libraries in the `.loc` file while other only for the `pip`.
+
+- [x] We must always use `pipenv` to ensure everyting goes to the `Pipfile.lock`.
+
+### What I have done? 
+
+1. first I have all the libraries that I want in my `requiremetns.txt` file so I used 
+```sh 
+pipenv install -r requirements.txt
+
+```

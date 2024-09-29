@@ -69,6 +69,7 @@ jupyter_client==7.4.9
 jupyter_contrib_core==0.4.2
 jupyter_contrib_nbextensions==0.7.0
 jupyter_core==5.7.2
+jupyter_markdown==0.0.2
 jupyter_nbextensions_configurator==0.6.4
 jupyter_server==2.14.2
 jupyter_server_fileid==0.9.3
@@ -78,10 +79,8 @@ jupyterlab==4.2.0
 jupyterlab-lsp==5.1.0
 jupyterlab-pseudo-language-pack==4.2.post3
 jupyterlab-spreadsheet-editor==0.7.2
-##jupyterlab-system-monitor==0.8.0
-##jupyterlab-theme-onedark==0.1.0
-# jupyterlab-topbar==0.6.1
-# jupyterlab-topbar-text==1.0.0
+jupyterlab-system-monitor==0.8.0
+jupyterlab-topbar==0.6.1
 jupyterlab-unfold==0.3.2
 jupyterlab-vim==4.1.4
 jupyterlab_cell_flash==0.4.0
