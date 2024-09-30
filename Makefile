@@ -27,7 +27,7 @@ help:
 	@echo ""
 	@echo "$(GREEN)lock$(RESET)            - Lock the Pipenv environment. Generates a Pipfile.lock file to ensure reproducibility of the environment across systems."
 	@echo "                  $(CYAN)Usage: make lock$(RESET)"
-	@echo "                  $(CYAN)Details:$(RESET) Locking ensures that the current versions of all installed dependencies are captured, helping to avoid future dependency conflicts."
+	@echo "                  $(CYAN)Details:$(RESET) the current versions of all installed dependencies are captured, helping to avoid future dependency conflicts."
 	@echo ""
 	@echo "$(YELLOW)===================================================$(RESET)"
 	@echo "$(CYAN)                End of Help$(RESET)"

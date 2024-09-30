@@ -212,7 +212,9 @@ needed.
 
 ### 1. Boilerplate with Abstract Classes and Decorators
 
-Here is a boilerplate example demonstrating the use of abstract classes along with decorators in Python. This example includes key concepts like inheritance, method overriding, and custom decorators.
+Here is a boilerplate example demonstrating the use of abstract classes along
+with decorators in Python. This example includes key concepts like inheritance,
+method overriding, and custom decorators.
 
 ```python
 from abc import ABC, abstractmethod
