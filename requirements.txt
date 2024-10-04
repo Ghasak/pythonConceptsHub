@@ -44,6 +44,7 @@ hyperlink==21.0.0
 idna==3.10
 importlib_metadata==8.5.0
 incremental==24.7.2
+ipdb==0.13.13
 ipykernel==6.29.5
 ipython==8.27.0
 ipython-genutils==0.2.0
@@ -78,10 +79,6 @@ jupyterlab==4.2.0
 jupyterlab-lsp==5.1.0
 jupyterlab-pseudo-language-pack==4.2.post3
 jupyterlab-spreadsheet-editor==0.7.2
-##jupyterlab-system-monitor==0.8.0
-##jupyterlab-theme-onedark==0.1.0
-# jupyterlab-topbar==0.6.1
-# jupyterlab-topbar-text==1.0.0
 jupyterlab-unfold==0.3.2
 jupyterlab-vim==4.1.4
 jupyterlab_cell_flash==0.4.0

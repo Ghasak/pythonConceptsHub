@@ -1,47 +1,40 @@
-from pathlib import Path
-import sys
-import os
-import csv
-import random
-from collections import Counter, OrderedDict, defaultdict
+# import csv
+import logging
+
+# import os
+# import random
+# import sys
+# from collections import Counter, OrderedDict, defaultdict
+# from pathlib import Path
+# from tests.debugging_template import testing
+from src.helper.employee import Employee
+
+# logging.basicConfig(level=logging.INFO)
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
+stream_handler = logging.StreamHandler()
+
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
 
 # from lib.basics_of_python.syntax_and_structure import Employee, my_message
 from rich.console import Console
 
-from src.helper.caller import Employee
-
 console = Console()
 
-console.log(os.path.abspath(__file__))
+
+def my_logging_function():
+    for i in range(10):
+        logger.info(f"current value of i -> {i}")
 
 
-data_path = "/Users/gmbp/Desktop/devCode/pythonHub/pythonCheatSheet/src/data/famous_women_in_science.csv"
-full_path = os.path.join(os.getcwd(), "src/data/famous_women_in_science.csv")
+# from src.helper.caller import Employee
 
-
-# Assume you're in the project root, this will always point to the correct path
-full_path = Path("src/data/famous_women_in_science.csv").resolve()
-
-# You can then use full_path directly
-print(full_path)
-
-
-def my_context_manager(data_path:str)->None:
-    with open(file = data_path, mode = "r",newline="",  encoding = "utf-8") as file:
-        lines = file.readlines()
-        for line in lines:
-            print(line, end = "")
-
-
-my_context_manager(full_path)
-
-# with open(file = data_path, mode = 'r', newline='', encoding='utf-8') as file:
-#     csv_reader = csv.reader(file)
-#
-#     for row in csv_reader:
-#         print(row)
-
-
-# console.log(my_message)
 if __name__ == "__main__":
-    pass
+    # testing()
+    emp = Employee("Jack", "Michael")
+    console.log("----------- EMPTY SPACE ---------------")
+    my_logging_function()
+    # print(emp)

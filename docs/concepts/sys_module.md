@@ -119,7 +119,8 @@ print(f"Number of CPUs: {num_cpus}")
 
 ### Mixing with Magic Methods Like `__file__`
 
-You can incorporate the `sys` and `platform` modules to handle file paths and system-specific information dynamically based on the processor or platform:
+You can incorporate the `sys` and `platform` modules to handle file paths and
+system-specific information dynamically based on the processor or platform:
 
 ```python
 import os
