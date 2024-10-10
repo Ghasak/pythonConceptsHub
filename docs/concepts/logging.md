@@ -43,9 +43,53 @@
 
 <!-- markdown-toc end -->
 
-## Common Practices 
+## Common Practices
+
+Here I will log into two different places one for the `std.out` and one for the logging `file`.
+This method is faster and easier and can work anytime without any futher hussle.
+
+```py
+# import csv
+import logging
+
+# import os
+# import random
+# import sys
+# from collections import Counter, OrderedDict, defaultdict
+# from pathlib import Path
+# from tests.debugging_template import testing
+from src.helper.employee import Employee
+
+# logging.basicConfig(level=logging.INFO)
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
+stream_handler = logging.StreamHandler()
+
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
+
+# from lib.basics_of_python.syntax_and_structure import Employee, my_message
+from rich.console import Console
+
+console = Console()
 
 
+def my_logging_function():
+    for i in range(10):
+        logger.info(f"current value of i -> {i}")
+
+
+# from src.helper.caller import Employee
+
+if __name__ == "__main__":
+    # testing()
+    emp = Employee("Jack", "Michael")
+    console.log("----------- EMPTY SPACE ---------------")
+    my_logging_function()
+    # print(emp)
+```
 
 ## Basics Logging
 
@@ -587,7 +631,7 @@ logger.critical("This is a CRITICAL message - both console and file")
 
 **Console (Development Environment):**
 
-```
+```sh
 2024-10-02 14:10:22,123 - my_app - DEBUG - This is a DEBUG message - only in console (for development)
 2024-10-02 14:10:22,124 - my_app - INFO - This is an INFO message - only in console (for development)
 2024-10-02 14:10:22,125 - my_app - WARNING - This is a WARNING message - both console and file
@@ -597,7 +641,7 @@ logger.critical("This is a CRITICAL message - both console and file")
 
 **File (`app.log`) (Production Environment):**
 
-```
+```sh
 2024-10-02 14:10:22,125 - WARNING - This is a WARNING message - both console and file
 2024-10-02 14:10:22,126 - ERROR - This is an ERROR message - both console and file
 2024-10-02 14:10:22,127 - CRITICAL - This is a CRITICAL message - both console and file
