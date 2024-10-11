@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "simple": {
+      "format": "%(asctime)s:%(filename)s:%(funcName)s: %(lineno)d: %(levelname)s: %(message)s",
+      "datefmt": "%Y-%m-%dT%H:%M:%S%z"
+    },
+    "colored": {
+      "()": "src.logging.MyColoredFormatter.MyColoredFormatter",
+      "format": "%(asctime)s: %(filename)s: %(funcName)s: L%(lineno)d: %(levelname)s: %(message)s",
+      "datefmt": "%Y-%m-%dT%H:%M:%S%z"
+    },
+    "json": {
+      "()": "src.logging.myCustomJsonClass01.MyJSONFormatter",
+      "fmt_keys": {
+        "level": "levelname",
+        "message": "message",
+        "timestamp": "timestamp",
+        "logger": "name",
+        "module": "module",
+        "function": "funcName",
+        "line": "lineno",
+        "thread_name": "threadName"
+      }
+    }
+  },
+  "handlers": {
+    "stdout": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "colored",
+      "stream": "ext://sys.stdout",
+      "filters": ["stdout_filter"]
+    },
+
+    "stderr": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "colored",
+      "stream": "ext://sys.stderr",
+      "filters": ["stderr_filter"]
+    },
+    "file": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "DEBUG",
+      "formatter": "json",
+      "filename": "src/logging/my_app.jsonl",
+      "maxBytes": 10000,
+      "backupCount": 3
+    }
+  },
+  "filters": {
+    "stdout_filter": {
+      "()": "src.logging.myFilters.StdoutFilter1"
+    },
+    "stderr_filter": {
+      "()": "src.logging.myFilters.StderrFilter"
+    }
+  },
+  "loggers": {
+    "root": {
+      "level": "DEBUG",
+      "handlers": ["stdout","stderr" ,"file"]
+    }
+  }
+}

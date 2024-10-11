@@ -1,5 +1,4 @@
 # import csv
-
 # import os
 # import random
 # import sys
@@ -10,17 +9,21 @@
 # from lib.basics_of_python.syntax_and_structure import Employee, my_message
 from rich.console import Console
 
-from src.logging.L01_myLoggerEngine import justLogging, logger
+# from src.logging.L01_myLoggerEngine import justLogging, logger
+# from src.logging.L02_loading_config_from_outside import testing_loading_config
+# from src.logging.L03_multi_config import testing_loading_config
+from src.logging.L04_json_formatter_class import testing_loading_config
 
 console = Console()
 
-justLogging()
+# justLogging()
 
+testing_loading_config()
 
-def myFunction():
-    for _ in range(10):
-        logger.info("this is just a test happend on main module,")
-
+# def myFunction():
+#     for _ in range(10):
+#         logger.info("this is just a test happend on main module,")
+#
 
 if __name__ == "__main__":
     pass
