@@ -1,0 +1,24 @@
+# pyproject.toml
+
+[tool.black]
+# Line length for wrapping code
+line-length = 200
+
+# Enable preview style which may include changes planned for the future
+preview = true
+
+# Skip string normalization (avoids changing single quotes to double quotes)
+skip-string-normalization = true
+
+# Avoid magic trailing commas (adds trailing commas to multi-line collections)
+skip-magic-trailing-comma = false
+
+# Exclude specific files or directories from being formatted
+exclude = ".git|.hg|.mypy_cache|.tox|.venv|_build|buck-out|build|dist|__pycache__"
+
+# Optionally specify which files to include
+# Only Python files are included by default
+include = "\\.pyi?$"
+
+
+

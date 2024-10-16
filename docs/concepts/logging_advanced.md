@@ -445,7 +445,7 @@ if __name__ == "__main__":
 
 ```
 
-## 7. Modern Tip -7 Store persistent logs in JSON
+## 7. Modern Tip -7 Store persistent logs in JSON Line file
 
 There is a need for a better logging file formattng, as we need to explore the
 file of the logging and filter it easily and isolate the `trace` and other
@@ -454,8 +454,204 @@ messages or a logging with two line messages.
 - We can achieve this by creating our logging file as a `json` file , i.e.,
   each line is a json object that can be load easily line by line.
 
+### 7.1 logging config
 
+You will need to care about the following directorires:
 
+1. `src.logging.MyColoredFormatter.MyColoredFormatter`: Here is the color scheme that we will use for the logging.
+2. `src.logging.myCustomJsonClass01.MyJSONFormatter`: Here is the jsonline exporting using the file handler.
+3. `src/logging/my_app.jsonl`: Here, we store the logging file.
+4. `src.logging.myFilters.StdoutFilter1`: the filter for stdout.
+5. `src.logging.myFilters.StderrFilter` : the filter for stderror
+
+```json
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "simple": {
+      "format": "%(asctime)s:%(filename)s:%(funcName)s: %(lineno)d: %(levelname)s: %(message)s",
+      "datefmt": "%Y-%m-%dT%H:%M:%S%z"
+    },
+    "colored": {
+      "()": "src.logging.MyColoredFormatter.MyColoredFormatter",
+      "format": "%(asctime)s: %(filename)s: %(funcName)s: L%(lineno)d: %(levelname)s: %(message)s",
+      "datefmt": "%Y-%m-%dT%H:%M:%S%z"
+    },
+    "json": {
+      "()": "src.logging.myCustomJsonClass01.MyJSONFormatter",
+      "fmt_keys": {
+        "level": "levelname",
+        "message": "message",
+        "timestamp": "timestamp",
+        "logger": "name",
+        "module": "module",
+        "function": "funcName",
+        "line": "lineno",
+        "thread_name": "threadName"
+      }
+    }
+  },
+  "handlers": {
+    "stdout": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "colored",
+      "stream": "ext://sys.stdout",
+      "filters": ["stdout_filter"]
+    },
+
+    "stderr": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "colored",
+      "stream": "ext://sys.stderr",
+      "filters": ["stderr_filter"]
+    },
+    "file": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "DEBUG",
+      "formatter": "json",
+      "filename": "src/logging/my_app.jsonl",
+      "maxBytes": 10000,
+      "backupCount": 3
+    }
+  },
+  "filters": {
+    "stdout_filter": {
+      "()": "src.logging.myFilters.StdoutFilter1"
+    },
+    "stderr_filter": {
+      "()": "src.logging.myFilters.StderrFilter"
+    }
+  },
+  "loggers": {
+    "root": {
+      "level": "DEBUG",
+      "handlers": ["stdout", "stderr", "file"]
+    }
+  }
+}
+```
+
+It's completely normal and often quite practical to have separate handlers for
+`stdout` and `stderr` in your logging configuration. Let me explain why this
+setup is beneficial and what you gain from it.
+
+### 7.2 **Why Separate Handlers for `stdout` and `stderr`?**
+
+1. **Separation of Log Levels**:
+
+   - The main reason to have separate handlers for `stdout` and `stderr` is to
+     **separate log messages based on their severity**.
+   - Generally, messages like `INFO` and `DEBUG` indicate normal operation,
+     which can be redirected to `stdout`. These are messages that are
+     informative, but not indicative of any problem.
+   - On the other hand, messages like `WARNING`, `ERROR`, and `CRITICAL`
+     indicate something problematic or unexpected, so it makes sense to redirect
+     them to `stderr`.
+
+2. **Improved Log Management**:
+
+   - Separating `stdout` and `stderr` helps with **log management** and
+     **troubleshooting**. This is particularly important when working with
+     Unix-based systems or in the context of automation scripts, logging
+     pipelines, or containerized environments.
+   - For instance, if you're running a container or a script that outputs logs,
+     `stdout` might be used to communicate regular progress, whereas `stderr` can
+     be used to signal that an issue needs attention. This is helpful when
+     redirecting output to different files or when filtering logs.
+
+3. **Log Parsing and Monitoring Tools**:
+   - **Log monitoring tools** and log parsers, such as `Logstash`, `Fluentd`,
+     or even custom scripts, can easily distinguish between `stdout` and `stderr`
+     to **route** messages appropriately for further action.
+   - Sending errors and warnings (`stderr`) separately allows for specific
+     alerts or escalations to be triggered based on those messages, while
+     `stdout` logs can be used for less critical purposes like performance
+     metrics or debugging.
+
+### 7.3 **How Your Filters and Handlers Work Together**
+
+With your current configuration:
+
+1. **`stdout` Handler with `StdoutFilter1`**:
+
+   - This handler will **only output messages with level `INFO` and `DEBUG`**.
+   - `StdoutFilter1` filters out everything from `WARNING` and above. This
+     means that regular operation details and debug information are sent to the
+     standard output (`stdout`), but no higher-severity messages.
+
+2. **`stderr` Handler with `StderrFilter`**:
+
+   - This handler will **only output messages with level `WARNING` and above**.
+   - This ensures that all messages indicating problems are directed to
+     `stderr`. This distinction allows the critical errors to be separated from
+     the normal log flow, making them easier to spot.
+
+3. **File Handler (`file`) with JSON Formatter**:
+   - This handler writes all logs (`DEBUG` level and above) to a file in JSON
+     format.
+   - This is a convenient way to retain a complete record of all log messages,
+     making it easier to trace an application's behavior over time.
+
+### 7.4 **Benefits of This Configuration**
+
+1. **Clarity in Logging Output**:
+
+   - By splitting the log outputs, it's much easier to **differentiate between
+     normal operational logs and issues** that require attention.
+   - Developers, support engineers, and DevOps professionals can focus on
+     `stderr` logs for problem analysis and refer to `stdout` for understanding
+     the general flow.
+
+2. **Flexible Log Redirection**:
+
+   - When running scripts or services, **redirecting logs** can be essential.
+     You can redirect `stdout` to one location (e.g., `/var/log/app_info.log`)
+     and `stderr` to another (e.g., `/var/log/app_errors.log`).
+   - You can achieve this on the command line like this:
+
+     ```bash
+     python my_app.py > app_info.log 2> app_errors.log
+     ```
+
+   - This ensures that normal messages don’t mix with error logs, which makes
+     troubleshooting easier.
+
+3. **Automation, Pipelining, and CI/CD Environments**:
+
+   - In many CI/CD environments, handling `stdout` and `stderr` separately can
+     be important for **automated alerting** or **pipeline scripts**.
+   - `stderr` logs can trigger an alert or an error handler in the pipeline,
+     while `stdout` logs might just be archived for reference.
+
+4. **Containerized and Cloud Environments**:
+   - For applications running inside **containers** (e.g., Docker), it is a
+     common practice to rely on `stdout` and `stderr` for logging.
+   - Cloud-native logging solutions often aggregate logs from containers, and
+     separating `stdout` and `stderr` makes it easier to **implement log
+     routing**, monitor health, and trigger alerts based on critical log
+     messages.
+
+### **Summary**
+
+- Having separate `stdout` and `stderr` handlers is **normal** and
+  **recommended** for most use cases, especially in environments where logs need
+  to be processed, redirected, or monitored closely.
+- This setup provides better control over how different types of logs are
+  handled and enables more effective troubleshooting and monitoring.
+- `stdout` is typically used for **informational and debug logs**, while
+  `stderr` is used for **warnings and errors**. This distinction can help you
+  streamline log analysis, troubleshooting, and monitoring.
+
+Your current configuration is well-structured and follows best practices by
+keeping the logs separated logically. It allows you to efficiently manage both
+routine information and issues, making your system easier to observe and
+maintain.
+
+If you need further assistance or have more questions on how to extend this
+setup or implement other logging best practices, let me know!
 
 ## Reference
 

@@ -1,0 +1,98 @@
+{
+  "level": "INFO",
+  "message": "[INFO] this is just a test ",
+  "timestamp": "2024-10-16T07:30:41.868284+00:00",
+  "logger": "src.logging.L04_json_formatter_class",
+  "module": "L04_json_formatter_class",
+  "function": "testing_loading_config",
+  "line": 19,
+  "thread_name": "MainThread"
+}
+{
+  "level": "DEBUG",
+  "message": "[DEBUG] this is just a test ",
+  "timestamp": "2024-10-16T07:30:41.868639+00:00",
+  "logger": "src.logging.L04_json_formatter_class",
+  "module": "L04_json_formatter_class",
+  "function": "testing_loading_config",
+  "line": 20,
+  "thread_name": "MainThread"
+}
+{
+  "level": "WARNING",
+  "message": "[WARNING] this is a warning test",
+  "timestamp": "2024-10-16T07:30:41.868717+00:00",
+  "logger": "src.logging.L04_json_formatter_class",
+  "module": "L04_json_formatter_class",
+  "function": "testing_loading_config",
+  "line": 21,
+  "thread_name": "MainThread"
+}
+{
+  "level": "ERROR",
+  "message": "[ERROR] this is an error test",
+  "timestamp": "2024-10-16T07:30:41.868769+00:00",
+  "logger": "src.logging.L04_json_formatter_class",
+  "module": "L04_json_formatter_class",
+  "function": "testing_loading_config",
+  "line": 22,
+  "thread_name": "MainThread"
+}
+{
+  "level": "INFO",
+  "message": "yes both are digits",
+  "timestamp": "2024-10-16T07:30:41.868828+00:00",
+  "logger": "src.logging.L04_json_formatter_class",
+  "module": "main",
+  "function": "my_function_for_parsing",
+  "line": 48,
+  "thread_name": "MainThread"
+}
+{
+  "level": "INFO",
+  "message": "yes both are digits",
+  "timestamp": "2024-10-16T07:30:41.868875+00:00",
+  "logger": "src.logging.L04_json_formatter_class",
+  "module": "main",
+  "function": "my_function_for_parsing",
+  "line": 48,
+  "thread_name": "MainThread"
+}
+{
+  "level": "INFO",
+  "message": "yes both are digits",
+  "timestamp": "2024-10-16T07:30:41.868912+00:00",
+  "logger": "src.logging.L04_json_formatter_class",
+  "module": "main",
+  "function": "my_function_for_parsing",
+  "line": 48,
+  "thread_name": "MainThread"
+}
+{
+  "level": "INFO",
+  "message": "yes both are digits",
+  "timestamp": "2024-10-16T07:30:41.868955+00:00",
+  "logger": "src.logging.L04_json_formatter_class",
+  "module": "main",
+  "function": "my_function_for_parsing",
+  "line": 48,
+  "thread_name": "MainThread"
+}
+{
+  "level": "INFO",
+  "message": "[INFO] this is just a test ",
+  "timestamp": "2024-10-16T07:30:41.868284+00:00",
+  "logger": "src.logging.L04_json_formatter_class",
+  "module": "L04_json_formatter_class",
+  "function": "testing_loading_config",
+  "line": 19,
+  "thread_name": "MainThread"
+}
+{"level": "INFO", "message": "[INFO] this is just a test ", "timestamp": "2024-10-16T17:33:32.393011+00:00", "logger": "src.logging.L04_json_formatter_class", "module": "L04_json_formatter_class", "function": "testing_loading_config", "line": 19, "thread_name": "MainThread"}
+{"level": "DEBUG", "message": "[DEBUG] this is just a test ", "timestamp": "2024-10-16T17:33:32.393494+00:00", "logger": "src.logging.L04_json_formatter_class", "module": "L04_json_formatter_class", "function": "testing_loading_config", "line": 20, "thread_name": "MainThread"}
+{"level": "WARNING", "message": "[WARNING] this is a warning test", "timestamp": "2024-10-16T17:33:32.393565+00:00", "logger": "src.logging.L04_json_formatter_class", "module": "L04_json_formatter_class", "function": "testing_loading_config", "line": 21, "thread_name": "MainThread"}
+{"level": "ERROR", "message": "[ERROR] this is an error test", "timestamp": "2024-10-16T17:33:32.393616+00:00", "logger": "src.logging.L04_json_formatter_class", "module": "L04_json_formatter_class", "function": "testing_loading_config", "line": 22, "thread_name": "MainThread"}
+{"level": "INFO", "message": "yes both are digits", "timestamp": "2024-10-16T17:33:32.393674+00:00", "logger": "src.logging.L04_json_formatter_class", "module": "main", "function": "my_function_for_parsing", "line": 48, "thread_name": "MainThread"}
+{"level": "INFO", "message": "yes both are digits", "timestamp": "2024-10-16T17:33:32.393717+00:00", "logger": "src.logging.L04_json_formatter_class", "module": "main", "function": "my_function_for_parsing", "line": 48, "thread_name": "MainThread"}
+{"level": "INFO", "message": "yes both are digits", "timestamp": "2024-10-16T17:33:32.393768+00:00", "logger": "src.logging.L04_json_formatter_class", "module": "main", "function": "my_function_for_parsing", "line": 48, "thread_name": "MainThread"}
+{"level": "INFO", "message": "yes both are digits", "timestamp": "2024-10-16T17:33:32.393808+00:00", "logger": "src.logging.L04_json_formatter_class", "module": "main", "function": "my_function_for_parsing", "line": 48, "thread_name": "MainThread"}

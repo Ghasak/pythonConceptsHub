@@ -4,6 +4,7 @@ python cheatsheet from A to Z including, best practices, coding templates, conce
 
 ## Architecture design
 
+```sh
                ┌───────────────────┐
                │ LIBRARY PLATFORM  ├──────┐
                └───────────────────┘      │
@@ -13,6 +14,7 @@ python cheatsheet from A to Z including, best practices, coding templates, conce
             │ ┌──────────────────────┐
             └▶│ IPY - terminal based │
               └──────────────────────┘
+```
 
 ## Install and configure
 
@@ -23,3 +25,8 @@ pipenv install --ignore-pipfile
 
 ```
 
+2. Formatting the log in single `oneliner`
+
+```sh
+:%!jq .
+```
