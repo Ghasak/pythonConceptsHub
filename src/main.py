@@ -49,6 +49,7 @@ def my_function_for_parsing(param1: str, param2: str):
 
 
 if __name__ == "__main__":
+
     my_function_for_parsing("1212", "12213")
     my_function_for_parsing("1212", "12213")
     my_function_for_parsing("1212", "12213")

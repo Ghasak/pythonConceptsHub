@@ -20,3 +20,7 @@ def testing_loading_config():
     logger.debug(f"[DEBUG] this is just a test ")
     logger.warning(f"[WARNING] this is a warning test")
     logger.error(f"[ERROR] this is an error test")
+
+
+if __name__ == "__main__":
+    pass
