@@ -5,12 +5,11 @@
 - `2024-10-01 12:15:29`: Creating the most wanted features.
 
 ## Concepts
-
 Assume we have the following.
 
 - [x] Error Handling
-- [ ] Logging and streamline.handler
-- [ ] python syntax
+- [x] Logging and streamline.handler
+- [x] python syntax
   - data structures and containers
 - [ ] Basics python modulers
   - [x] os,
@@ -39,8 +38,21 @@ Assume we have the following.
 
   - [ ] Using Django
   - [ ] Flask
+  - [ ] JavaScript attach event
 
 - [ ] Dashboard Dev.
+
   - [ ] Stearmlit
   - [ ] Plotly
   - [ ] Shiny for python
+
+- [ ] Datapipe-line
+
+  - [ ] Working on AirFlow from Apache
+
+- [ ] Concurrency Programming
+
+  - [ ] AsyncIO
+  - [ ] Multithreading and `Global Interpreter Lock`
+  - [ ] multiprocesor
+

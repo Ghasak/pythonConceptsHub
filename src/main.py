@@ -48,9 +48,27 @@ def my_function_for_parsing(param1: str, param2: str):
         logger.info("yes both are digits")
 
 
-if __name__ == "__main__":
+class Animal:
 
-    my_function_for_parsing("1212", "12213")
-    my_function_for_parsing("1212", "12213")
-    my_function_for_parsing("1212", "12213")
-    my_function_for_parsing("1212", "12213")
+    def __init__(self, breed: str = None, sex: bool = 0):
+        self.breed = breed
+        self.sex = sex
+        console.log(f"the  Animal object is created using : {self.breed} with gender: {self.sex}")
+
+    def __str__(self):
+        return f"This is an Object created using {self.__class__.__name__}, with: {self.breed} with gender: {self.sex}"
+
+
+class Dog(Animal):
+
+    def __init__(self, dog_name: str = None, dog_age: int = 0, breed: str = None, sex: bool = 0):
+        self.dog_name = dog_name
+        self.dog_age = dog_age
+        super().__init__(breed, sex)
+
+
+if __name__ == "__main__":
+    my_dog = Dog("Jack", 12, "Bouldog", 1)
+    logger.info(my_dog)
+
+    # my_function_for_parsing("1212", "12213")
