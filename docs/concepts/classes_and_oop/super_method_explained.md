@@ -157,6 +157,3 @@ This is an Object created using Dog, with: Bulldog with gender: 1
 - Use `super()` to call the parent class's constructor.
 - Pass all required variables from the subclass to the parent class via `super()`.
 - If a parent class needs specific arguments, they must be passed from the subclass. Alternatively, you can provide default values or input from other sources.
-
-
-
