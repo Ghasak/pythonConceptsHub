@@ -1034,31 +1034,44 @@ Using `logging.getLogger(__name__)` is generally considered a **good practice** 
 
 1. **Contextual Logging**:
 
-   - `__name__` will automatically use the **name of the current module**, which makes it easier to identify **where the log messages are coming from** in large applications.
+   - `__name__` will automatically use the **name of the current module**,
+     which makes it easier to identify **where the log messages are coming from**
+     in large applications.
    - For example:
-     - If the module is `src.logging.L05_queue_handler`, the logger’s name will be `src.logging.L05_queue_handler`.
-     - This is especially useful when logs come from different parts of your application.
+     - If the module is `src.logging.L05_queue_handler`, the logger’s name will
+       be `src.logging.L05_queue_handler`.
+     - This is especially useful when logs come from different parts of your
+       application.
 
 2. **Consistent and Flexible**:
 
    - You don’t need to manually change the logger name in every module.
-   - If the module name changes, the logger name will **automatically reflect the new module name**.
+   - If the module name changes, the logger name will **automatically reflect
+     the new module name**.
 
 3. **Easier Filtering and Control**:
 
-   - You can control logging behavior by **module**. For example, you can set log levels per module (`logging.getLogger("src.logging").setLevel(logging.WARNING)`).
+   - You can control logging behavior by **module**. For example, you can set
+     log levels per module
+     (`logging.getLogger("src.logging").setLevel(logging.WARNING)`).
 
 4. **Integration with External Tools**:
-   - Many logging tools (e.g., **Sentry** or **ELK stack**) benefit from having detailed, module-level logger names for filtering and diagnostics.
+   - Many logging tools (e.g., **Sentry** or **ELK stack**) benefit from having
+     detailed, module-level logger names for filtering and diagnostics.
 
 ### **Disadvantages**:
 
 1. **Less Control Over Global Logging Settings**:
 
-   - If you want all modules to use **exactly the same logger name** (like `"my_app"`), this approach can make it harder to ensure consistency across modules.
+   - If you want all modules to use **exactly the same logger name** (like
+     `"my_app"`), this approach can make it harder to ensure consistency across
+     modules.
 
 2. **Verbose Logger Names**:
-   - In some cases, module names can get very long (e.g., `src.logging.L05_queue_handler`), which might clutter your logs. However, this can be mitigated by configuring how logger names are displayed in your log format.
+   - In some cases, module names can get very long (e.g.,
+     `src.logging.L05_queue_handler`), which might clutter your logs. However,
+     this can be mitigated by configuring how logger names are displayed in your
+     log format.
 
 ---
 
@@ -1068,27 +1081,37 @@ Using `logging.getLogger(__name__)` is generally considered a **good practice** 
 
 1. **Simple and Consistent Logger Name**:
 
-   - If you want **all log messages to use the same logger name**, hard-coding `"my_app"` ensures that every part of your application will log to the same place.
+   - If you want **all log messages to use the same logger name**, hard-coding
+     `"my_app"` ensures that every part of your application will log to the same
+     place.
 
 2. **Easier Setup for Small Applications**:
 
-   - In smaller applications, where logs don't need to be differentiated by module, a single hard-coded logger name might make things simpler.
+   - In smaller applications, where logs don't need to be differentiated by
+     module, a single hard-coded logger name might make things simpler.
 
 3. **Fewer Configuration Challenges**:
-   - If your logging system expects **one logger name** (e.g., `"my_app"`), using `__name__` might complicate the setup, and a hard-coded name might be more practical.
+   - If your logging system expects **one logger name** (e.g., `"my_app"`),
+     using `__name__` might complicate the setup, and a hard-coded name might be
+     more practical.
 
 ### **Disadvantages**:
 
 1. **Loses Context**:
 
-   - You lose the ability to know **which module generated the log message**. All logs will appear as if they came from the `"my_app"` logger, making it harder to debug large applications.
+   - You lose the ability to know **which module generated the log message**.
+     All logs will appear as if they came from the `"my_app"` logger, making it
+     harder to debug large applications.
 
 2. **More Manual Work**:
 
-   - You need to ensure every module uses the same logger name, which is prone to human error (e.g., accidentally using `"my-app"` in one module and `"my_app"` in another).
+   - You need to ensure every module uses the same logger name, which is prone
+     to human error (e.g., accidentally using `"my-app"` in one module and
+     `"my_app"` in another).
 
 3. **Less Granular Control**:
-   - You can't easily adjust the log level or behavior **per module** because everything logs under the same name.
+   - You can't easily adjust the log level or behavior **per module** because
+     everything logs under the same name.
 
 ---
 
@@ -1140,14 +1163,38 @@ Log Output:
 
 ## **Conclusion**
 
-In most cases, **`logging.getLogger(__name__)` is the better practice**, especially for larger projects, as it offers **contextual information** and flexibility. It also makes it easier to maintain and debug your code by showing exactly which module produced the log message.
+In most cases, **`logging.getLogger(__name__)` is the better practice**,
+especially for larger projects, as it offers **contextual information** and
+flexibility. It also makes it easier to maintain and debug your code by showing
+exactly which module produced the log message.
 
-However, for **simple applications** or when you want **a unified logging experience** across all modules, using a **single hard-coded name** like `"my_app"` can be a valid approach.
+However, for **simple applications** or when you want **a unified logging
+experience** across all modules, using a **single hard-coded name** like
+`"my_app"` can be a valid approach.
 
 Choose the method based on the complexity and size of your project:
 
 - **Large projects** → Use `__name__` for context-aware logging.
 - **Small, single-module apps** → Use `"my_app"` for simplicity.
+
+## MODER TIP - 10 FOR LIBRARIES DON'T CONFIGURE LOGGING
+
+You can still use logging, create loggers, log messages and other import
+events. Just don't configure it with `dictConfig` or any other config.
+Let the application do the configurations. if a user dosent' configure logging,
+the default and expected behvaiour is that warnings and above will be printed
+to `stderr`.
+
+**NOTE**:
+The library `LOG4J` in Java it is an extermaly popular loggin library for
+`JavaA` that had a 0-day vulnerbility wreak havoc and cause absolute
+pandemonium in the business world as thousands of large prducts and services.
+
+- Logging user input + logs run arbitrary code everyone getting hacked.
+- `LogRecord Object` there is a python similar class called `LogRecord` which
+  any drived instance created automatically by the Logger everytime something is
+  logged, and can be created manually via makeLogRecord() ( forexample, from a
+  pickled event erecieved over the wire).
 
 ## Reference
 

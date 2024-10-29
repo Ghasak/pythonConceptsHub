@@ -15,7 +15,8 @@ from src.concepts.oop import *
 # from src.logging.L02_loading_config_from_outside import testing_loading_config
 # from src.logging.L03_multi_config import testing_loading_config
 #from src.logging.L04_json_formatter_class import testing_loading_config
-from src.logging.L05_queue_handler import testing_loading_config
+#from src.logging.L05_queue_handler import testing_loading_config
+from src.logging.L06_final_prod import testing_loading_config
 
 console = Console()
 

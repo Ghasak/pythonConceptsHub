@@ -3,7 +3,7 @@
   "disable_existing_loggers": false,
   "formatters": {
     "simple": {
-      "format": "%(asctime)s:%(filename)s:%(funcName)s: %(lineno)d: %(levelname)s: %(message)s",
+      "format": "%(asctime)s: %(filename)s: %(funcName)s: %(lineno)d: %(levelname)s: %(message)s",
       "datefmt": "DATE: %Y-%m-%d TIME:%H:%M:%S [%z]"
     },
     "colored": {
@@ -25,19 +25,33 @@
       }
     }
   },
+  "filters": {
+    "stdout_filter": {
+      "()": "src.logging.myFilters.StdoutFilter"
+    },
+    "stderr_filter": {
+      "()": "src.logging.myFilters.StderrFilter"
+    }
+  },
   "handlers": {
+    "stdout": {
+      "class": "logging.StreamHandler",
+      "formatter": "colored",
+      "stream": "ext://sys.stdout",
+      "filters": ["stdout_filter"]
+    },
     "stderr": {
       "class": "logging.StreamHandler",
       "level": "WARNING",
-
       "formatter": "colored",
-      "stream": "ext://sys.stderr"
+      "stream": "ext://sys.stderr",
+      "filters": ["stderr_filter"]
     },
     "file_json": {
       "class": "logging.handlers.RotatingFileHandler",
       "level": "DEBUG",
       "formatter": "json",
-      "filename": "src/logging/my_app_log.log",
+      "filename": "src/logging/project_log_file.log",
       "maxBytes": 10000,
       "backupCount": 3
     },
