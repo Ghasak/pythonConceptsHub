@@ -1,60 +1,84 @@
 {
   "level": "INFO",
-  "message": "[INFO] this is just a test ",
-  "timestamp": "2024-10-28T09:13:53.189063+00:00",
-  "logger": "src.logging.L04_json_formatter_class",
-  "module": "L04_json_formatter_class",
+  "message": "[INFO] This is just a test",
+  "timestamp": "2024-10-29T05:37:07.602723+00:00",
+  "logger": "src.logging.L05_queue_handler",
+  "module": "L05_queue_handler",
   "function": "testing_loading_config",
-  "line": 19,
-  "thread_name": "MainThread"
+  "line": 49,
+  "thread_name": "MainThread",
+  "x": "hello"
+}
+{
+  "level": "INFO",
+  "message": "[INFO] This is just a test",
+  "timestamp": "2024-10-29T05:37:07.602723+00:00",
+  "logger": "src.logging.L05_queue_handler",
+  "module": "L05_queue_handler",
+  "function": "testing_loading_config",
+  "line": 49,
+  "thread_name": "MainThread",
+  "x": "hello"
 }
 {
   "level": "DEBUG",
-  "message": "[DEBUG] this is just a test ",
-  "timestamp": "2024-10-28T09:13:53.189397+00:00",
-  "logger": "src.logging.L04_json_formatter_class",
-  "module": "L04_json_formatter_class",
+  "message": "[DEBUG] This is just a test",
+  "timestamp": "2024-10-29T05:37:07.603101+00:00",
+  "logger": "src.logging.L05_queue_handler",
+  "module": "L05_queue_handler",
   "function": "testing_loading_config",
-  "line": 20,
+  "line": 50,
+  "thread_name": "MainThread",
+  "y": "world"
+}
+{
+  "level": "DEBUG",
+  "message": "[DEBUG] This is just a test",
+  "timestamp": "2024-10-29T05:37:07.603101+00:00",
+  "logger": "src.logging.L05_queue_handler",
+  "module": "L05_queue_handler",
+  "function": "testing_loading_config",
+  "line": 50,
+  "thread_name": "MainThread",
+  "y": "world"
+}
+{
+  "level": "WARNING",
+  "message": "[WARNING] This is a warning test",
+  "timestamp": "2024-10-29T05:37:07.603270+00:00",
+  "logger": "src.logging.L05_queue_handler",
+  "module": "L05_queue_handler",
+  "function": "testing_loading_config",
+  "line": 51,
   "thread_name": "MainThread"
 }
 {
   "level": "WARNING",
-  "message": "[WARNING] this is a warning test",
-  "timestamp": "2024-10-28T09:13:53.189479+00:00",
-  "logger": "src.logging.L04_json_formatter_class",
-  "module": "L04_json_formatter_class",
+  "message": "[WARNING] This is a warning test",
+  "timestamp": "2024-10-29T05:37:07.603270+00:00",
+  "logger": "src.logging.L05_queue_handler",
+  "module": "L05_queue_handler",
   "function": "testing_loading_config",
-  "line": 21,
+  "line": 51,
   "thread_name": "MainThread"
 }
 {
   "level": "ERROR",
-  "message": "[ERROR] this is an error test",
-  "timestamp": "2024-10-28T09:13:53.189534+00:00",
-  "logger": "src.logging.L04_json_formatter_class",
-  "module": "L04_json_formatter_class",
+  "message": "[ERROR] This is an error test",
+  "timestamp": "2024-10-29T05:37:07.603340+00:00",
+  "logger": "src.logging.L05_queue_handler",
+  "module": "L05_queue_handler",
   "function": "testing_loading_config",
-  "line": 22,
+  "line": 52,
   "thread_name": "MainThread"
 }
 {
-  "level": "INFO",
-  "message": "the  Animal object is created using : Bouldog with gender: 1",
-  "timestamp": "2024-10-28T09:13:53.189612+00:00",
-  "logger": "src.logging.L04_json_formatter_class",
-  "module": "super_method_understanding",
-  "function": "__init__",
-  "line": 27,
-  "thread_name": "MainThread"
-}
-{
-  "level": "INFO",
-  "message": "This is an Object created using Dog, with: Bouldog with gender: 1",
-  "timestamp": "2024-10-28T09:13:53.189669+00:00",
-  "logger": "src.logging.L04_json_formatter_class",
-  "module": "super_method_understanding",
-  "function": "testing_super_method_concept",
-  "line": 45,
+  "level": "ERROR",
+  "message": "[ERROR] This is an error test",
+  "timestamp": "2024-10-29T05:37:07.603340+00:00",
+  "logger": "src.logging.L05_queue_handler",
+  "module": "L05_queue_handler",
+  "function": "testing_loading_config",
+  "line": 52,
   "thread_name": "MainThread"
 }

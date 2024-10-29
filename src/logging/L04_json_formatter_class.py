@@ -16,8 +16,8 @@ def setup_logging():
 
 def testing_loading_config():
     setup_logging()
-    logger.info(f"[INFO] this is just a test ")
-    logger.debug(f"[DEBUG] this is just a test ")
+    logger.info(f"[INFO] this is just a test ", extra = {"x": "hello"})
+    logger.debug(f"[DEBUG] this is just a test ", extra = {"y": "world"})
     logger.warning(f"[WARNING] this is a warning test")
     logger.error(f"[ERROR] this is an error test")
 

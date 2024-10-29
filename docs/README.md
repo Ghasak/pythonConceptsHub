@@ -9,6 +9,7 @@ Assume we have the following.
 
 - [x] Error Handling
 - [x] Logging and streamline.handler
+    - [x] Advanced logging
 - [x] python syntax
   - data structures and containers
 - [ ] Basics python modulers
@@ -48,11 +49,11 @@ Assume we have the following.
 
 - [ ] Datapipe-line
 
-  - [ ] Working on AirFlow from Apache
+  - [x] Working on AirFlow from Apache
 
-- [ ] Concurrency Programming
+- [x] Concurrency Programming
 
-  - [ ] AsyncIO
-  - [ ] Multithreading and `Global Interpreter Lock`
-  - [ ] multiprocesor
+  - [x] AsyncIO
+  - [x] Multithreading and `Global Interpreter Lock`
+  - [x] multiprocesor
 

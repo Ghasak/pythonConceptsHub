@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 def setup_logging():
-    config_file = os.path.join(os.getcwd(), "src/logging/config02.json")
+    config_file = os.path.join(os.getcwd(), "src/logging/config03.json")
 
     with open(config_file) as f_in:
         config = json.load(f_in)

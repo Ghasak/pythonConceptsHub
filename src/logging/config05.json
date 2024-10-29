@@ -26,6 +26,11 @@
     }
   },
   "handlers": {
+    "queue_handler": {
+      "class": "logging.handlers.QueueHandler",
+      "queue": "ext://queue.Queue",
+      "level": "DEBUG"
+    },
     "stdout": {
       "class": "logging.StreamHandler",
       "level": "DEBUG",
@@ -33,10 +38,9 @@
       "stream": "ext://sys.stdout",
       "filters": ["stdout_filter"]
     },
-
     "stderr": {
       "class": "logging.StreamHandler",
-      "level": "DEBUG",
+      "level": "ERROR",
       "formatter": "colored",
       "stream": "ext://sys.stderr",
       "filters": ["stderr_filter"]
@@ -61,7 +65,8 @@
   "loggers": {
     "root": {
       "level": "DEBUG",
-      "handlers": ["stdout","stderr" ,"file"]
+      "handlers": ["queue_handler", "stdout", "stderr", "file"]
     }
   }
 }
+

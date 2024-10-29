@@ -4,7 +4,7 @@
   "formatters": {
     "simple": {
       "format": "%(asctime)s:%(filename)s:%(funcName)s:L%(lineno)d: %(levelname)s: %(message)s",
-      "datefmt": "%Y-%m-%dT%H:%M:%S%z"
+      "datefmt": "DATE:%Y-%m-%d TIME:%H:%M:%S%z"
     },
     "json": {
       "()": "src.logging.myCustomJsonClass01.MyJSONFormatter",

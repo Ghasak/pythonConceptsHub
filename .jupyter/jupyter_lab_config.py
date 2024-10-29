@@ -1,10 +1,10 @@
 # Configuration file for lab.
 
-c = get_config()  #noqa
+c = get_config()  # noqa
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Application(SingletonConfigurable) configuration
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 ## This is an application.
 
 ## The date format used by logging formatters for %(asctime)s
@@ -75,9 +75,9 @@ c = get_config()  #noqa
 #  Default: False
 # c.Application.show_config_json = False
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # JupyterApp(Application) configuration
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 ## Base class for Jupyter applications
 
 ## Answer yes to any prompts.
@@ -120,9 +120,9 @@ c = get_config()  #noqa
 #  See also: Application.show_config_json
 # c.JupyterApp.show_config_json = False
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # ExtensionApp(JupyterApp) configuration
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 ## Base class for configurable Jupyter Server Extension Applications.
 #
 #      ExtensionApp subclasses can be initialized two ways:
@@ -211,9 +211,9 @@ c = get_config()  #noqa
 #  Default: []
 # c.ExtensionApp.template_paths = []
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # LabServerApp(ExtensionApp) configuration
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 ## A Lab Server Application that runs out-of-the-box
 
 ## "A list of comma-separated URIs to get the allowed extensions list
@@ -401,9 +401,9 @@ c = get_config()  #noqa
 #  Default: ''
 # c.LabServerApp.workspaces_dir = ''
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # LabApp(LabServerApp) configuration
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 ##
 #  See also: LabServerApp.allowed_extensions_uris
 # c.LabApp.allowed_extensions_uris = ''
@@ -673,9 +673,9 @@ c = get_config()  #noqa
 #  Default: '/Users/gmbp/.jupyter/lab/workspaces'
 # c.LabApp.workspaces_dir = '/Users/gmbp/.jupyter/lab/workspaces'
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # ServerApp(JupyterApp) configuration
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 ## The Jupyter Server application class.
 
 ## Set the Access-Control-Allow-Credentials: true header

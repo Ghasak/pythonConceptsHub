@@ -14,9 +14,7 @@ class Employee:
     def __init__(self, first_name=None, last_name=None):
         self.first_name = first_name
         self.last_name = last_name
-        logger.info(
-            f"Created Employee: {self.first_name}-{self.last_name} using class : {self.__class__.__name__}"
-        )
+        logger.info(f"Created Employee: {self.first_name}-{self.last_name} using class : {self.__class__.__name__}")
 
     def __str__(self):
         return f"Created Employee: {self.first_name}-{self.last_name} using class : {self.__class__.__name__}"

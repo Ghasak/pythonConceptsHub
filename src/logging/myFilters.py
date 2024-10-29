@@ -9,7 +9,7 @@ class StdoutFilter1(logging.Filter):
     `info` and `debug`
     """
 
-    def filter(self, record):
+    def filter(self, record: logging.LogRecord) -> bool | logging.LogRecord:
         return record.levelno < logging.WARNING
 
 
@@ -21,11 +21,10 @@ class StdoutFilter2(logging.Filter):
     warning, error, critical messages
     """
 
-    def filter(self, record):
+    def filter(self, record: logging.LogRecord) -> bool | logging.LogRecord:
         return record.levelno >= logging.WARNING
 
 
 class StderrFilter(logging.Filter):
-
     def filter(self, record):
         return record.levelno >= logging.WARNING  # Allow only WARNING and above

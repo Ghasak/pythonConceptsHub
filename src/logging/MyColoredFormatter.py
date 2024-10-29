@@ -3,7 +3,6 @@ import datetime as dt
 from src.logging.constants import *
 
 
-
 class MyColoredFormatter(logging.Formatter):
     """
     Custom log formatter to add colors to log messages based on the log level
@@ -25,4 +24,3 @@ class MyColoredFormatter(logging.Formatter):
         # Construct formatted log line
         log_line = f"{asctime}: {filename}: {funcName}: L{lineno}: {levelname}: {message}"
         return log_line
-

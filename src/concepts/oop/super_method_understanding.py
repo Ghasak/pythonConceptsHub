@@ -1,10 +1,10 @@
 from src.logging.L04_json_formatter_class import logger
 
+var_gh = 100
+
 
 def SuperMethodConcept():
-
     class Employee:
-
         CONFIG = {"num_of_emp": 0}
 
         def __init__(
@@ -20,7 +20,6 @@ def SuperMethodConcept():
             self.salary: float = salary
 
     class Animal:
-
         def __init__(self, breed: str = None, sex: bool = 0):
             self.breed = breed
             self.sex = sex
@@ -30,7 +29,6 @@ def SuperMethodConcept():
             return f"This is an Object created using {self.__class__.__name__}, with: {self.breed} with gender: {self.sex}"
 
     class Dog(Animal):
-
         def __init__(self, dog_name: str = None, dog_age: int = 0, breed: str = None, sex: bool = 0):
             self.dog_name = dog_name
             self.dog_age = dog_age

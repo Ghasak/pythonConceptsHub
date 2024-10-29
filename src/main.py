@@ -14,11 +14,15 @@ from src.concepts.oop import *
 # from src.logging.L01_myLoggerEngine import justLogging, logger
 # from src.logging.L02_loading_config_from_outside import testing_loading_config
 # from src.logging.L03_multi_config import testing_loading_config
-from src.logging.L04_json_formatter_class import testing_loading_config
+#from src.logging.L04_json_formatter_class import testing_loading_config
+from src.logging.L05_queue_handler import testing_loading_config
 
 console = Console()
 
+
 if __name__ == "__main__":
     testing_loading_config()
-    testing_super_method_concept()
+    # testing_super_method_concept()
+    # console.log(var_gh)
+
 

@@ -28,9 +28,7 @@ class CustomColoredFormatter(logging.Formatter):
         This method uses the `datetime.fromtimestamp()` function to convert the creation timestamp
         to a datetime object and then formats it. The timezone is appended to the formatted time.
         """
-        dt = datetime.fromtimestamp(
-            record.created, tz=datetime.now().astimezone().tzinfo
-        )
+        dt = datetime.fromtimestamp(record.created, tz=datetime.now().astimezone().tzinfo)
         if datefmt:
             formatted_time = dt.strftime(datefmt)
         else:
@@ -62,9 +60,7 @@ class CustomColoredFormatter(logging.Formatter):
         message = f"{log_color}{record.getMessage()}{RESET}"
 
         # Construct formatted log line
-        log_line = (
-            f"{asctime}: {filename}: {funcName}: L{lineno}: {levelname}: {message}"
-        )
+        log_line = f"{asctime}: {filename}: {funcName}: L{lineno}: {levelname}: {message}"
         return log_line
 
 
@@ -124,9 +120,7 @@ def justLogging():
 
         # Raise ZeroDivisionError if b is zero
         if b == 0:
-            raise ZeroDivisionError(
-                "Attempted to divide by zero, which is not allowed."
-            )
+            raise ZeroDivisionError("Attempted to divide by zero, which is not allowed.")
 
         # Division operation
         c = a / b

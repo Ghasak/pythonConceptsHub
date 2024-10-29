@@ -653,10 +653,502 @@ maintain.
 If you need further assistance or have more questions on how to extend this
 setup or implement other logging best practices, let me know!
 
+## Extra with logging
+
+- Given the configurations we have already written, we can always add
+  additional pieces of information using the `extra` parameter.
+
+```py
+logger.debug("debug message", extra = {"x":"Hello"})
+
+```
+
+## MODERN TIP - 9 LOG OFF TH EMAIN THREAD
+
+Due to its inherent characteristic, invoking a log function involves
+input/output operations. If a user initiates a request to my web application
+and this results in ten log messages being generated, I do not want to
+introduce a delay of ten round-trip times in my logging service before
+responding to the user. Currently, this is what will take place as all logging
+calls are synchronous and blocking.
+
+The solution is to use a `QueueHanlder` to log-off the main thread,
+
+```sh
+
+   ┌──────────────────────────────┐                     ┌────────────────────────────────────────────────────┐
+   │     ┌───────────────┐        │                     │              ┌─────────────────┐                   │
+   │     │ LOGGER "ROOT" │        │                     │              │  QUEUE LISTNER  │                   │
+   │     └───────────────┘        │                     │              └─────────────────┘                   │
+   │       LEVEL: DEBUG           │                     │   ┌──────────────────┐       ┌────────────────┐    │
+   │                              │                     │   │ HANDLER "STDERR" │       │ HANDLER "FILE" │    │
+   │ ┌─────────────────────────┐  │                     │   └──────────────────┘       └────────────────┘    │
+   │ │ HANDLER "QUEUE_HANDLER" │  │                     │  ┌────────────────────┐     ┌───────────────────┐  │
+   │ └───────────┬─────────────┘  │                     │  │ LEVEL: WARNING     │     │  LEVEL: DEBUG     │  │
+   │             │                │                     │  │ FORMATTER "SIMPLE" │     │ FORMATTER: "JSON" │  │
+   └─────────────┼────────────────┘                     │  └────────┬───────────┘     └─────────┬─────────┘  │
+    ▲        ┌───┴───┐                                  │           ▼                           ▼            │
+    │        │ QUEUE │─────────────▶ OTHER THREAD ─────▶│        STDERR                       FILE           │
+    │        └───────┘                                  └────────────────────────────────────────────────────┘
+    │┌─────────────┐
+    └┤ PROPAGATE! ┌────────────────────┐
+     └────────────│┘  LOGGER "MY_APP"  │
+                  └────────────────────┘
+```
+
+- A queue handler stores your log recors in a queue without blocking, while an
+  associated queue listener accepts those messages.
+
+Here’s a breakdown and explanation of your **logging configuration** and
+**Python script**. I’ll explain what each part of the configuration does, how
+it interacts with your code, and what you should expect when using it in your
+project.
+
+---
+
+## **Configuration Explanation (`config05.json`)**
+
+### 1. **Formatters**
+
+These define how the log messages will be formatted when they are output by the handlers.
+
+- **`simple`**:
+
+  ```json
+  "format": "%(asctime)s:%(filename)s:%(funcName)s: %(lineno)d: %(levelname)s: %(message)s"
+  ```
+
+  This will display log messages with the timestamp, filename, function name,
+  line number, log level, and message.
+
+- **`colored`**:
+  Uses a **custom formatter** from your code: `MyColoredFormatter`. It’s
+  designed to print log messages with colors, making them easier to read on the
+  console.
+
+- **`json`**:
+  Uses another **custom JSON formatter** (`MyJSONFormatter`). Instead of plain
+  text, logs are structured in JSON format with specific keys like `level`,
+  `message`, `timestamp`, etc., which is useful for machine-readable logs.
+
+### 2. **Handlers**
+
+Handlers define **where the logs go** (console, file, etc.) and how they are
+formatted.
+
+- **`queue_handler`**:
+  Uses a **`QueueHandler`** that sends log records to a queue (defined later in
+  the code with `Queue`). This enables asynchronous logging by passing log
+  records from different threads to a single listener.
+
+- **`stdout`**:
+  Sends **DEBUG-level logs** or higher to the **standard output
+  (`sys.stdout`)** with the `colored` formatter.
+
+- **`stderr`**:
+  Sends **ERROR-level logs** to **`sys.stderr`**, also using the `colored`
+  formatter.
+
+- **`file`**:
+  A **rotating file handler** that writes logs to `my_app.jsonl`. It keeps log
+  file sizes manageable (with `maxBytes=10000` and `backupCount=3`).
+
+### 3. **Filters**
+
+Filters allow you to selectively process log messages based on custom logic.
+
+- **`stdout_filter`** and **`stderr_filter`**:
+  Custom filters (from `myFilters` module) likely control what gets logged to
+  `stdout` and `stderr`. These could filter logs based on conditions, such as
+  message content or context.
+
+### 4. **Loggers**
+
+- **`root`** logger:
+  The `root` logger is the **default logger** used in your code. It’s
+  configured to:
+  - Accept **DEBUG-level logs** and higher.
+  - Use the following handlers: `queue_handler`, `stdout`, `stderr`, and
+    `file`.
+
+---
+
+## **What to Expect from the Configuration in Your Code**
+
+1. **Queue-based Asynchronous Logging**:
+
+   - Your `QueueHandler` sends all log records to a **`Queue`**.
+   - A **`QueueListener`** processes records asynchronously, passing them to
+     the other handlers (`stdout`, `stderr`, `file`).
+   - This setup ensures that logging is **non-blocking**, meaning log messages
+     won’t slow down your code even under heavy logging loads.
+
+2. **Logs Sent to Different Destinations**:
+
+   - **DEBUG** and **INFO** logs appear in **`stdout`** with colors (via
+     `MyColoredFormatter`).
+   - **ERROR** logs are sent to **`stderr`**.
+   - All logs are saved in a **rotating JSON log file** (`my_app.jsonl`),
+     ensuring that logs are structured and easy to parse.
+
+3. **Graceful Shutdown**:
+
+   - When your application exits, the `QueueListener` is **stopped gracefully**
+     using `atexit`. This ensures that all pending log messages in the queue are
+     processed before the program terminates.
+
+4. **Custom Filters**:
+   - The `stdout` and `stderr` filters allow you to **control what gets
+     logged** to the respective streams (e.g., filtering based on log content).
+
+---
+
+## **Python Code Explanation**
+
+### Key Parts
+
+1. **Setting up Logging (`setup_logging`)**:
+
+   - The `setup_logging()` function loads the configuration from
+     `config05.json`.
+   - It **injects the queue** into the `queue_handler` dynamically.
+   - It **verifies** that at least one handler is attached to the root logger.
+   - It **creates and starts a `QueueListener`**, passing all handlers except
+     the `queue_handler` (which only sends logs to the queue).
+
+2. **Generating Logs (`testing_loading_config`)**:
+
+   - This function generates several log messages with different levels:
+     `INFO`, `DEBUG`, `WARNING`, and `ERROR`.
+   - It also passes **extra context** with some logs (e.g., `extra={"x": "hello"}`), which could be used by your custom formatters.
+
+3. **Starting the Program**:
+   - If the script is executed directly (`if __name__ == "__main__":`), it
+     calls `testing_loading_config()` to **initialize logging and generate test
+     logs**.
+
+---
+
+## **Expected Output**
+
+When you run your code, you should see the following behavior:
+
+- **On `stdout` (standard output)**:
+  Colored **DEBUG and INFO logs** will be printed, formatted by `MyColoredFormatter`.
+
+- **On `stderr` (standard error)**:
+  **ERROR logs** will be printed, also using `MyColoredFormatter`.
+
+- **In the file `my_app.jsonl`**:
+  All logs will be saved in **JSON format**, structured for easy parsing.
+
+Example log in `stdout`:
+
+```
+DATE: 2024-10-29 TIME:14:35:52 [+0000]: L05_queue_handler.py: testing_loading_config: L30: INFO: [INFO] This is just a test
+```
+
+Example log in `my_app.jsonl`:
+
+```json
+{
+  "level": "INFO",
+  "message": "[INFO] This is just a test",
+  "timestamp": "2024-10-29T14:35:52+0000",
+  "logger": "__main__",
+  "module": "L05_queue_handler",
+  "function": "testing_loading_config",
+  "line": 30,
+  "thread_name": "MainThread"
+}
+```
+
+---
+
+## **Potential Issues to Watch For**
+
+1. **Filters**:
+
+   - If the filters aren’t correctly implemented, some logs might not appear
+     where expected (e.g., logs not showing up in `stdout` or `stderr`).
+
+2. **Handler Errors**:
+
+   - If any handler (like `file` or `stdout`) fails, it could cause logging to
+     break. Make sure the log file path (`src/logging/my_app.jsonl`) is writable.
+
+3. **Performance**:
+   - Queue-based logging is efficient, but if the queue isn’t drained quickly enough (e.g., under heavy load), it could grow large. Adjust the `QueueListener` if needed.
+
+---
+
+## **Summary**
+
+This setup provides a **robust, asynchronous logging system** with multiple handlers for different outputs:
+
+- **Console output** (with colors for readability).
+- **JSON-formatted log files** for structured logging.
+- **Filters** to control what goes to `stdout` and `stderr`.
+- **Asynchronous logging** using a queue to avoid blocking the main thread.
+
+It ensures your logs are easy to read during development (via colored output) and easy to analyze in production (via structured JSON logs).
+
+## How about jsonl file?
+
+Yes, based on your configuration, the **JSONL file** (`my_app.jsonl`) will
+capture **all log messages** from your application. Here’s a detailed
+explanation of how it works and why all messages will end up in the JSONL file.
+
+---
+
+### **How the JSONL File (`my_app.jsonl`) Works in Your Setup**
+
+In your configuration:
+
+```json
+"handlers": {
+  "file": {
+    "class": "logging.handlers.RotatingFileHandler",
+    "level": "DEBUG",
+    "formatter": "json",
+    "filename": "src/logging/my_app.jsonl",
+    "maxBytes": 10000,
+    "backupCount": 3
+  }
+}
+```
+
+- **`level`: `"DEBUG"`** – This means the `file` handler will capture **all
+  logs** from **DEBUG** level and above (i.e., `DEBUG`, `INFO`, `WARNING`,
+  `ERROR`, `CRITICAL`).
+- **`formatter`: `"json"`** – Logs will be formatted as JSON objects, making
+  them suitable for **structured logging**.
+- **`RotatingFileHandler`** – The log file will rotate when it reaches **10,000
+  bytes**, keeping **up to 3 backups**.
+
+Since the **root logger** has `"file"` in its handlers list, **every log
+message** processed by the logger will also be sent to the JSONL file.
+
+---
+
+### **Expected Behavior**
+
+1. **All log messages will be written to `my_app.jsonl`**:
+
+   - Since the `file` handler has a **DEBUG** level, it will capture **all log
+     levels**: `DEBUG`, `INFO`, `WARNING`, `ERROR`, and `CRITICAL`.
+
+2. **Log file format**:
+
+   - Each log entry will be formatted as a **JSON object**, and **each line in
+     the file will contain a single log message** (hence the `.jsonl` extension,
+     meaning JSON Lines).
+
+   Example JSONL file content:
+
+   ```json
+        {
+          "level": "INFO",
+          "message": "[INFO] This is just a test",
+          "timestamp": "2024-10-29T14:35:52+0000",
+          "logger": "__main__",
+          "module": "L05_queue_handler",
+          "function": "testing_loading_config",
+          "line": 30,
+          "thread_name": "MainThread"
+        }
+        {
+          "level": "DEBUG",
+          "message": "[DEBUG] This is just a test",
+          "timestamp": "2024-10-29T14:35:53+0000",
+          "logger": "__main__",
+          "module": "L05_queue_handler",
+          "function": "testing_loading_config",
+          "line": 31,
+          "thread_name": "MainThread"
+        }
+        {
+          "level": "WARNING",
+          "message": "[WARNING] This is a warning test",
+          "timestamp": "2024-10-29T14:35:54+0000",
+          "logger": "__main__",
+          "module": "L05_queue_handler",
+          "function": "testing_loading_config",
+          "line": 32,
+          "thread_name": "MainThread"
+        }
+        {
+          "level": "ERROR",
+          "message": "[ERROR] This is an error test",
+          "timestamp": "2024-10-29T14:35:55+0000",
+          "logger": "__main__",
+          "module": "L05_queue_handler",
+          "function": "testing_loading_config",
+          "line": 33,
+          "thread_name": "MainThread"
+        }
+   ```
+
+3. **Handling Multiple Threads**:
+   - Since the `QueueHandler` sends logs to a **queue** and the `QueueListener`
+     processes them, the JSONL file will capture **logs from multiple threads**
+     correctly in the order they are processed.
+
+---
+
+### **Verifying the JSONL File**
+
+After running your script, you can check the content of `my_app.jsonl` by printing the file:
+
+```bash
+cat src/logging/my_app.jsonl
+```
+
+You should see all the log messages (in JSON format) from the test function `testing_loading_config()`.
+
+---
+
+### **Summary**
+
+Yes, the **JSONL file will capture all log messages** at or above the `DEBUG`
+level. Since your `root` logger sends logs to the `file` handler with a `DEBUG`
+level, **every log message from your application will be saved in the JSONL
+file**, including those sent to `stdout` and `stderr`.
+
+This setup ensures:
+
+- **Comprehensive logging** to the JSONL file.
+- **Asynchronous handling** of logs via the `QueueListener`.
+- **Structured logs** for easier analysis and post-processing.
+
+## Perforamnce and efficiency
+
+Is there a bad code practice of using logger = logging.getLogger(**name**) # Module-level logger instead passing a hard coded single name like "my_app".
+Using `logging.getLogger(__name__)` is generally considered a **good practice** and has several advantages over hard-coding a logger name like `"my_app"`. However, there are a few situations where using a **hard-coded logger name** might be preferable. Let’s go over the pros and cons of each approach and when to use them.
+
+---
+
+## **Using `__name__` (Recommended Practice)**
+
+### **Advantages**:
+
+1. **Contextual Logging**:
+
+   - `__name__` will automatically use the **name of the current module**, which makes it easier to identify **where the log messages are coming from** in large applications.
+   - For example:
+     - If the module is `src.logging.L05_queue_handler`, the logger’s name will be `src.logging.L05_queue_handler`.
+     - This is especially useful when logs come from different parts of your application.
+
+2. **Consistent and Flexible**:
+
+   - You don’t need to manually change the logger name in every module.
+   - If the module name changes, the logger name will **automatically reflect the new module name**.
+
+3. **Easier Filtering and Control**:
+
+   - You can control logging behavior by **module**. For example, you can set log levels per module (`logging.getLogger("src.logging").setLevel(logging.WARNING)`).
+
+4. **Integration with External Tools**:
+   - Many logging tools (e.g., **Sentry** or **ELK stack**) benefit from having detailed, module-level logger names for filtering and diagnostics.
+
+### **Disadvantages**:
+
+1. **Less Control Over Global Logging Settings**:
+
+   - If you want all modules to use **exactly the same logger name** (like `"my_app"`), this approach can make it harder to ensure consistency across modules.
+
+2. **Verbose Logger Names**:
+   - In some cases, module names can get very long (e.g., `src.logging.L05_queue_handler`), which might clutter your logs. However, this can be mitigated by configuring how logger names are displayed in your log format.
+
+---
+
+## **Using a Hard-Coded Logger Name (e.g., `"my_app"`)**
+
+### **Advantages**:
+
+1. **Simple and Consistent Logger Name**:
+
+   - If you want **all log messages to use the same logger name**, hard-coding `"my_app"` ensures that every part of your application will log to the same place.
+
+2. **Easier Setup for Small Applications**:
+
+   - In smaller applications, where logs don't need to be differentiated by module, a single hard-coded logger name might make things simpler.
+
+3. **Fewer Configuration Challenges**:
+   - If your logging system expects **one logger name** (e.g., `"my_app"`), using `__name__` might complicate the setup, and a hard-coded name might be more practical.
+
+### **Disadvantages**:
+
+1. **Loses Context**:
+
+   - You lose the ability to know **which module generated the log message**. All logs will appear as if they came from the `"my_app"` logger, making it harder to debug large applications.
+
+2. **More Manual Work**:
+
+   - You need to ensure every module uses the same logger name, which is prone to human error (e.g., accidentally using `"my-app"` in one module and `"my_app"` in another).
+
+3. **Less Granular Control**:
+   - You can't easily adjust the log level or behavior **per module** because everything logs under the same name.
+
+---
+
+## **Which Approach Should You Use?**
+
+- **For Larger Projects**:
+  Use `logging.getLogger(__name__)` so you get **contextual logging** per module, making it easier to debug and trace logs.
+
+- **For Smaller Projects** or **Highly Centralized Logging Needs**:
+  Use a **hard-coded name** like `"my_app"` if you want **one consistent logger** across the entire project.
+
+---
+
+## **Example Comparison**
+
+### Using `__name__` (Recommended for Large Projects):
+
+```python
+# In src/logging/L05_queue_handler.py
+logger = logging.getLogger(__name__)  # Logger name: 'src.logging.L05_queue_handler'
+
+logger.info("This is an info log.")
+```
+
+Log Output:
+
+```
+2024-10-29 14:35:52,001 src.logging.L05_queue_handler: This is an info log.
+```
+
+---
+
+### Using Hard-Coded Logger Name (Suitable for Small Projects):
+
+```python
+# In src/logging/L05_queue_handler.py
+logger = logging.getLogger("my_app")
+
+logger.info("This is an info log.")
+```
+
+Log Output:
+
+```
+2024-10-29 14:35:52,001 my_app: This is an info log.
+```
+
+---
+
+## **Conclusion**
+
+In most cases, **`logging.getLogger(__name__)` is the better practice**, especially for larger projects, as it offers **contextual information** and flexibility. It also makes it easier to maintain and debug your code by showing exactly which module produced the log message.
+
+However, for **simple applications** or when you want **a unified logging experience** across all modules, using a **single hard-coded name** like `"my_app"` can be a valid approach.
+
+Choose the method based on the complexity and size of your project:
+
+- **Large projects** → Use `__name__` for context-aware logging.
+- **Small, single-module apps** → Use `"my_app"` for simplicity.
+
 ## Reference
 
 - [python logging official website](https://docs.python.org/3/library/logging.html)
-
-
-
-
