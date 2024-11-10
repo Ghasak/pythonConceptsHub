@@ -1,20 +1,22 @@
 # SQLAlchemy with Python
+
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+
 **Table of Contents**
 
 - [SQLAlchemy with Python](#sqlalchemy-with-python)
-    - [Concept](#concept)
-    - [Starting point](#starting-point)
-        - [Step 1: Setting Up the Tables](#step-1-setting-up-the-tables)
-        - [Step 2: Inserting Data](#step-2-inserting-data)
-        - [Step 3: Querying the Tables](#step-3-querying-the-tables)
-        - [Notes on Execution](#notes-on-execution)
-    - [Concept -2](#concept--2)
-        - [Understanding `relationship`](#understanding-relationship)
-        - [Correct Way to Think of `relationship`](#correct-way-to-think-of-relationship)
-        - [ASCII Diagram of the Car Database Relationships](#ascii-diagram-of-the-car-database-relationships)
-        - [Explanation of the Diagram](#explanation-of-the-diagram)
-        - [How Relationships Work in Practice](#how-relationships-work-in-practice)
+  - [Concept](#concept)
+  - [Starting point](#starting-point)
+    - [Step 1: Setting Up the Tables](#step-1-setting-up-the-tables)
+    - [Step 2: Inserting Data](#step-2-inserting-data)
+    - [Step 3: Querying the Tables](#step-3-querying-the-tables)
+    - [Notes on Execution](#notes-on-execution)
+  - [Concept -2](#concept--2)
+    - [Understanding `relationship`](#understanding-relationship)
+    - [Correct Way to Think of `relationship`](#correct-way-to-think-of-relationship)
+    - [ASCII Diagram of the Car Database Relationships](#ascii-diagram-of-the-car-database-relationships)
+    - [Explanation of the Diagram](#explanation-of-the-diagram)
+    - [How Relationships Work in Practice](#how-relationships-work-in-practice)
 
 <!-- markdown-toc end -->
 

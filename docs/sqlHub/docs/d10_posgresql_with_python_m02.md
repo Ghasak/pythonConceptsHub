@@ -1238,14 +1238,19 @@ your database.
 
 Can i also add index for fast and speed up also how about using redis database
 for checking and loading the database for searching in case i want tj search the
-car by id.
-Yes, adding indexes and using a caching layer like Redis are excellent strategies to improve the performance of your application when working with large datasets.
+car by id. Yes, adding indexes and using a caching layer like Redis are
+excellent strategies to improve the performance of your application when working
+with large datasets.
 
 ### 1. Adding Indexes to Speed Up Queries
 
-Indexes are a fundamental way to speed up database queries, especially for frequently accessed columns. For your use case, adding indexes on fields like `car_id` in the `car_info` table can significantly improve the speed of queries that filter by `car_id`.
+Indexes are a fundamental way to speed up database queries, especially for
+frequently accessed columns. For your use case, adding indexes on fields like
+`car_id` in the `car_info` table can significantly improve the speed of queries
+that filter by `car_id`.
 
-In SQLAlchemy, you can add an index to a column by specifying the `index=True` argument:
+In SQLAlchemy, you can add an index to a column by specifying the `index=True`
+argument:
 
 ```python
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, Boolean, ForeignKey
@@ -1274,21 +1279,32 @@ class CarInfo(Base):
     model = relationship('CarModel', back_populates='cars')
 ```
 
-- **`car_id` index**: This index will speed up lookups by `car_id`, which is especially useful for fetching individual car records or checking existence.
-- **`timestamp` index**: If you frequently query or sort by the latest timestamp, an index on `timestamp` can improve performance when retrieving recent records.
+- **`car_id` index**: This index will speed up lookups by `car_id`, which is
+  especially useful for fetching individual car records or checking existence.
+- **`timestamp` index**: If you frequently query or sort by the latest
+  timestamp, an index on `timestamp` can improve performance when retrieving
+  recent records.
 
-Indexes make searching and filtering operations faster but may slightly slow down insertions and updates due to the need to update the index. So, consider indexing columns that you often use in search conditions or as join keys.
+Indexes make searching and filtering operations faster but may slightly slow
+down insertions and updates due to the need to update the index. So, consider
+indexing columns that you often use in search conditions or as join keys.
 
 ---
 
 ### 2. Using Redis for Faster Lookups and Caching
 
-Redis is an in-memory data store that can be used as a caching layer to reduce database load and speed up frequently accessed data. For example, you can use Redis to cache `car_info` records, allowing quick lookups by `car_id` without hitting the main database each time.
+Redis is an in-memory data store that can be used as a caching layer to reduce
+database load and speed up frequently accessed data. For example, you can use
+Redis to cache `car_info` records, allowing quick lookups by `car_id` without
+hitting the main database each time.
 
 Here’s how you might use Redis for this scenario:
 
-- **Step 1**: Set up a Redis cache where each `car_id` maps to the corresponding `car_info` data.
-- **Step 2**: On each request, first check Redis for the `car_id`. If found, use the cached result; if not, query the database and then store the result in Redis for future requests.
+- **Step 1**: Set up a Redis cache where each `car_id` maps to the corresponding
+  `car_info` data.
+- **Step 2**: On each request, first check Redis for the `car_id`. If found, use
+  the cached result; if not, query the database and then store the result in
+  Redis for future requests.
 
 #### Example Implementation
 

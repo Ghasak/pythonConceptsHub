@@ -1,13 +1,33 @@
 # SQL Real Data Example
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [SQL Real Data Example](#sql-real-data-example)
+    - [Key Data Points](#key-data-points)
+        - [Static Variables (Fixed Information)](#static-variables-fixed-information)
+            - [Dynamic Variables (Varying Information)](#dynamic-variables-varying-information)
+        - [Proposed Database Table Structure](#proposed-database-table-structure)
+        - [1. Track Last Scrape Date](#1-track-last-scrape-date)
+        - [2. Hash Important Fields to Detect Changes](#2-hash-important-fields-to-detect-changes)
+        - [3. Conditional Scraping Based on Hash Comparison](#3-conditional-scraping-based-on-hash-comparison)
+        - [4. Optimizing the Frequency of Scraping](#4-optimizing-the-frequency-of-scraping)
+        - [Database Table Update with Additional Fields](#database-table-update-with-additional-fields)
+        - [Summary of the Process](#summary-of-the-process)
+    - [Using Python](#using-python)
+        - [Explanation of Each Table](#explanation-of-each-table)
+    - [Q1 - In Deepth](#q1---in-deepth)
+        - [Explanation:](#explanation)
+
+<!-- markdown-toc end -->
 
 Based on the screenshots provided, I'll outline the key data points visible on
 this car listing page and categorize them into **static** and **dynamic**
 fields. Then, I’ll structure these fields into a database table that can
 accommodate numerous entries.
 
-### Key Data Points
+## Key Data Points
 
-#### Static Variables (Fixed Information)
+### Static Variables (Fixed Information)
 
 1. **Make** (e.g., BMW)
 2. **Model** (e.g., 3 Series 320i)

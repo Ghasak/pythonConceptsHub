@@ -1,4 +1,13 @@
 # SQLITE3 IN TERMINAL
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [SQLITE3 IN TERMINAL](#sqlite3-in-terminal)
+    - [-](#-)
+    - [Enhance sqlite3 in Terminal](#enhance-sqlite3-in-terminal)
+    - [USEFUL UTILITIES](#useful-utilities)
+
+<!-- markdown-toc end -->
 
 For fast checking the help file of `sqlite3` you can use
 

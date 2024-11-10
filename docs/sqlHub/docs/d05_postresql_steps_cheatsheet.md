@@ -1,4 +1,17 @@
 # PostgreSQL
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [PostgreSQL](#postgresql)
+    - [Useful commmands](#useful-commmands)
+    - [More Insights](#more-insights)
+        - [1. Databases](#1-databases)
+        - [2. Tables](#2-tables)
+        - [3. Rows (Data Manipulation in Tables)](#3-rows-data-manipulation-in-tables)
+        - [4. Indexes (Optional but Common for Optimization)](#4-indexes-optional-but-common-for-optimization)
+        - [Summary Table: Overall Workflow](#summary-table-overall-workflow)
+
+<!-- markdown-toc end -->
 
 ## Useful commmands
 

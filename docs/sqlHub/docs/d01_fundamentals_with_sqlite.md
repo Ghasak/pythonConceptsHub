@@ -1,4 +1,16 @@
 # Fundamentals with SQLITE
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [Fundamentals with SQLITE](#fundamentals-with-sqlite)
+    - [Changing-log](#changing-log)
+    - [Concepts](#concepts)
+    - [SQL with nvim buffer](#sql-with-nvim-buffer)
+        - [In a NVIM buffer](#in-a-nvim-buffer)
+    - [Install necessary dependencies](#install-necessary-dependencies)
+        - [Explanation of the fields:](#explanation-of-the-fields)
+
+<!-- markdown-toc end -->
 
 ## Changing-log
 
