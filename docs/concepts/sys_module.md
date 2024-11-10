@@ -87,7 +87,9 @@ processor information.
 
 ### Processor Information Using Other Tools
 
-To get more detailed processor-related information, developers often use the `os` module, along with platform-specific tools such as `platform`, or external libraries like `psutil`.
+To get more detailed processor-related information, developers often use the
+`os` module, along with platform-specific tools such as `platform`, or external
+libraries like `psutil`.
 
 ### Example for Retrieving Processor Information with `platform` Module
 

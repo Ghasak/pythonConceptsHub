@@ -1,0 +1,9 @@
+{
+  "connections": [
+    {
+      "driver": "sqlite3",
+      "dataSourceName": "./employee_database.db"
+    }
+  ]
+}
+
