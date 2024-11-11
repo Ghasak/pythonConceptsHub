@@ -1,7 +1,0 @@
-id,first_name,last_name,timestamp,age,salary
-1,Alice,Johnson,2024-11-01,28,55000.0
-2,Bob,Smith,2024-11-02,32,62000.0
-3,Charlie,Brown,2024-11-03,45,75000.0
-4,Diana,Green,2024-11-04,29,58000.0
-5,Ethan,White,2024-11-05,40,67000.0
-6,Jay,Michael,2024-11-06,40,1211100.0
