@@ -23,7 +23,6 @@ console = Console()
 
 
 
-
 if __name__ == "__main__":
     testing_loading_config()
     # testing_super_method_concept()

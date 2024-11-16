@@ -1,31 +1,45 @@
 # SQLAlchemy in Action
 
+## Things to be consider always
+
+- [x] Index
+- [x] ORM relationships
+- [x] docker container for a given database while store databases locally.
+
 ## TODO
 
 With the fundamentals and advanced topics covered, here are a few directions you could take next:
 
 1. **Testing and Mocking with SQLAlchemy**:
 
-   - Learn techniques for testing database interactions, including using in-memory SQLite databases and mocking for isolated tests.
+   - Learn techniques for testing database interactions, including using
+     in-memory SQLite databases and mocking for isolated tests.
 
 2. **Asynchronous SQLAlchemy**:
 
-   - Explore SQLAlchemy’s asynchronous API for high-performance, concurrent applications, ideal for web applications handling multiple requests simultaneously.
+   - Explore SQLAlchemy’s asynchronous API for high-performance, concurrent
+     applications, ideal for web applications handling multiple requests
+     simultaneously.
 
 3. **Working with Migrations (Alembic)**:
 
-   - Dive into schema migrations with Alembic, SQLAlchemy’s official migration tool, which helps manage schema changes over time.
+   - Dive into schema migrations with Alembic, SQLAlchemy’s official migration
+     tool, which helps manage schema changes over time.
 
 4. **Advanced Querying with CTEs and Window Functions**:
 
-   - Explore Common Table Expressions (CTEs) and window functions for complex analytical queries.
+   - Explore Common Table Expressions (CTEs) and window functions for complex
+     analytical queries.
 
 5. **Caching Strategies**:
-   - Implement caching mechanisms to store frequently accessed data, reducing database load for read-heavy applications.
+   - Implement caching mechanisms to store frequently accessed data, reducing
+     database load for read-heavy applications.
 
-Let me know if any of these topics interests you, or if there’s another area you’d like to explore!
+Let me know if any of these topics interests you, or if there’s another area
+you’d like to explore!
 
-6. about async with sqlalchemy such as `asyncpg` driver for postgres [here](https://magicstack.github.io/asyncpg/current/usage.html).
+6. about async with sqlalchemy such as `asyncpg` driver for postgres
+   [here](https://magicstack.github.io/asyncpg/current/usage.html).
 
 ---
 

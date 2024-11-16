@@ -30,6 +30,3 @@ pipenv install --ignore-pipfile
 ```sh
 :%!jq .
 ```
-
-
-

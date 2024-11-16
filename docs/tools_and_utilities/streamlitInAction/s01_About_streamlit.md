@@ -75,23 +75,33 @@ if st.button("Run Task"):
 
 ### Key Points:
 
-- **`capture_output=True`**: Captures the output, so you can display it in Streamlit.
-- **Error Handling**: Consider adding error handling to check for any issues when running the binary.
+- **`capture_output=True`**: Captures the output, so you can display it in
+  Streamlit.
+- **Error Handling**: Consider adding error handling to check for any issues
+  when running the binary.
 - **Permissions**: Ensure the binary has execution permissions (`chmod +x my_cpp_binary` on Unix-like systems).
-- **Path to Binary**: Use the correct path to your binary. For relative paths, make sure the Streamlit app runs in the same directory or provide an absolute path.
+- **Path to Binary**: Use the correct path to your binary. For relative paths,
+  make sure the Streamlit app runs in the same directory or provide an absolute
+  path.
 
 This setup allows users to trigger the C++ binary by clicking a button in the
 Streamlit app, with the output shown directly in the Streamlit interface.
 
 ## Having tasks
 
-If you have multiple individual Python scripts (e.g., `task1.py`, `task2.py`, etc.) and want to trigger each one from a button in a Streamlit app, you can follow a similar approach. Here’s how to set it up:
+If you have multiple individual Python scripts (e.g., `task1.py`, `task2.py`,
+etc.) and want to trigger each one from a button in a Streamlit app, you can
+follow a similar approach. Here’s how to set it up:
 
-1. **Define Functions for Each Script**: Create a function in Streamlit to trigger each script, using the `subprocess` module to run them.
+1. **Define Functions for Each Script**: Create a function in Streamlit to
+   trigger each script, using the `subprocess` module to run them.
 
-2. **Add Buttons for Each Task**: Use `st.button()` to create separate buttons for each script. When a button is clicked, the corresponding script is executed.
+2. **Add Buttons for Each Task**: Use `st.button()` to create separate buttons
+   for each script. When a button is clicked, the corresponding script is
+   executed.
 
-3. **Display Output**: Capture and display the output of each script in Streamlit.
+3. **Display Output**: Capture and display the output of each script in
+   Streamlit.
 
 Here’s a code example:
 
