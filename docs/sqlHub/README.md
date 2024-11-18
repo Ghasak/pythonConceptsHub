@@ -4,7 +4,8 @@
   - [x] ORM with python and engine connection
 - [x] CRUD in action
 - [ ] There is Atomic (ACID) to be investigate
-- [ ] Can we serialize data like markdown file as a binary and store it as blob
+- [x] Can we serialize data like markdown file as a binary and store it as blob
+- [x] Schema and how to use it in action
 
 ## Tools and Utilities
 

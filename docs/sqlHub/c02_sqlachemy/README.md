@@ -89,13 +89,17 @@ Here’s a table summarizing the differences between **SQLAlchemy Core** and **S
 2. **ORM Fetching Methods**:
    - `.all()`: Returns all results as a list of ORM model instances.
    - `.first()`: Returns the first result as a model instance or `None`.
-   - **Relationships**: With lazy loading, related data isn’t fetched until accessed, while eager loading (`joinedload`, `subqueryload`) preloads related data.
+   - **Relationships**: With lazy loading, related data isn’t fetched until
+     accessed, while eager loading (`joinedload`, `subqueryload`) preloads
+     related data.
 
 ### Additional Notes
 
 - **SQL Syntax in Core vs. ORM**:
-  - **Core** allows **direct SQL syntax** using `conn.execute("SQL Statement")`, which is also compatible in ORM with `session.execute("SQL Statement")`.
+  - **Core** allows **direct SQL syntax** using `conn.execute("SQL Statement")`,
+    which is also compatible in ORM with `session.execute("SQL Statement")`.
 - **Transaction Control**:
-  - **Core** requires explicit transaction management (`conn.begin()`), while **ORM** sessions handle transactions implicitly.
+  - **Core** requires explicit transaction management (`conn.begin()`), while
+    **ORM** sessions handle transactions implicitly.
 
 ---

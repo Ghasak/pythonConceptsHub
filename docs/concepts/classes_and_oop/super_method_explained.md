@@ -1,12 +1,28 @@
 # SUPER METHOD EXPLAINED
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+
+**Table of Contents**
+
+- [SUPER METHOD EXPLAINED](#super-method-explained)
+  - [Question](#question)
+  - [Starting from a question](#starting-from-a-question)
+    - [Key Points About the Code:](#key-points-about-the-code)
+    - [Detailed Walkthrough:](#detailed-walkthrough)
+    - [Explanation of `super()` and Variable Passing:](#explanation-of-super-and-variable-passing)
+    - [Fixed Code with Improvements:](#fixed-code-with-improvements)
+    - [Output:](#output)
+    - [Summary:](#summary)
+
+<!-- markdown-toc end -->
+
 ## Question
 
-Help me to understand more about the super should I pass all variables similar to the parent variables?
-or I can skip them? if I skip them how I can provide them to the dog
-Class If I don't know them in the parent class which is Animal
+Help me to understand more about the super should I pass all variables similar
+to the parent variables? or I can skip them? if I skip them how I can provide
+them to the dog Class If I don't know them in the parent class which is Animal
 
-```py
+```python
 class Animal:
 
     def __init__(self, breed: str = None, sex: bool = 0):
@@ -44,15 +60,22 @@ specifically how the `super()` function works to pass variables from a subclass
 
 1. **Inheritance:**
 
-   - The `Dog` class inherits from the `Animal` class, meaning it will have access to the attributes and methods of `Animal`.
+   - The `Dog` class inherits from the `Animal` class, meaning it will have
+     access to the attributes and methods of `Animal`.
 
 2. **`super()` usage:**
 
-   - `super().__init__(...)` calls the parent class (`Animal`)'s `__init__` method from within the `Dog` class’s constructor. This ensures that the attributes of `Animal` (`breed` and `sex`) are properly initialized when creating a `Dog` object.
+   - `super().__init__(...)` calls the parent class (`Animal`)'s `__init__`
+     method from within the `Dog` class’s constructor. This ensures that the
+     attributes of `Animal` (`breed` and `sex`) are properly initialized when
+     creating a `Dog` object.
 
 3. **Argument Passing:**
-   - In the `Dog` class’s `__init__` method, you pass the `breed` and `sex` arguments to the parent `Animal` class using `super().__init__(breed, sex)`.
-   - **Yes**, you must pass the appropriate arguments to the parent class if they are needed there. This is to ensure the `Animal` class's attributes are properly set.
+   - In the `Dog` class’s `__init__` method, you pass the `breed` and `sex`
+     arguments to the parent `Animal` class using `super().__init__(breed, sex)`.
+   - **Yes**, you must pass the appropriate arguments to the parent class if
+     they are needed there. This is to ensure the `Animal` class's attributes
+     are properly set.
 
 ---
 
@@ -70,8 +93,11 @@ specifically how the `super()` function works to pass variables from a subclass
 
    - `Animal` is the parent class.
    - It has two attributes: `breed` and `sex`.
-   - The constructor (`__init__`) sets the values of these attributes when the object is created.
-   - You're trying to log details using `console.log()`, but this is **JavaScript syntax** and will throw an error in Python. You should use Python’s logging or `print()` instead.
+   - The constructor (`__init__`) sets the values of these attributes when the
+     object is created.
+   - You're trying to log details using `console.log()`, but this is
+     **JavaScript syntax** and will throw an error in Python. You should use
+     Python’s logging or `print()` instead.
 
 2. **The `Dog` Class:**
 
@@ -85,7 +111,9 @@ specifically how the `super()` function works to pass variables from a subclass
 
    - `Dog` is the subclass, inheriting from `Animal`.
    - The `Dog` class introduces two new attributes: `dog_name` and `dog_age`.
-   - In the `Dog` class's `__init__`, you initialize these attributes and use `super()` to call the parent class's `__init__` method to initialize the `breed` and `sex` attributes from `Animal`.
+   - In the `Dog` class's `__init__`, you initialize these attributes and use
+     `super()` to call the parent class's `__init__` method to initialize the
+     `breed` and `sex` attributes from `Animal`.
 
 3. **Main Code Block:**
 
@@ -95,8 +123,11 @@ specifically how the `super()` function works to pass variables from a subclass
        logger.info(my_dog)
    ```
 
-   - Here, a `Dog` object is created with the name `"Jack"`, age `12`, breed `"Bouldog"`, and sex `1` (likely indicating male).
-   - Then, you try to log the `Dog` object using `logger.info()`. This will call the `__str__()` method defined in the `Animal` class (since `Dog` inherits it), and display a string representation of the object.
+   - Here, a `Dog` object is created with the name `"Jack"`, age `12`, breed
+     `"Bouldog"`, and sex `1` (likely indicating male).
+   - Then, you try to log the `Dog` object using `logger.info()`. This will call
+     the `__str__()` method defined in the `Animal` class (since `Dog` inherits
+     it), and display a string representation of the object.
 
 ---
 
@@ -104,15 +135,23 @@ specifically how the `super()` function works to pass variables from a subclass
 
 1. **Why Use `super()`?**
 
-   - When a subclass (like `Dog`) extends a parent class (like `Animal`), the parent class still needs to initialize its own attributes. `super()` allows you to reuse the parent class’s constructor without repeating the same code.
+   - When a subclass (like `Dog`) extends a parent class (like `Animal`), the
+     parent class still needs to initialize its own attributes. `super()` allows
+     you to reuse the parent class’s constructor without repeating the same
+     code.
 
 2. **Do You Need to Pass All Parent Variables to `super()`?**
 
-   - Yes, if the parent class requires certain variables to initialize its attributes (like `breed` and `sex` here), you need to pass those when calling `super()`.
-   - If you don't know the values of these attributes upfront, you can pass default or placeholder values, or gather them from user input later.
+   - Yes, if the parent class requires certain variables to initialize its
+     attributes (like `breed` and `sex` here), you need to pass those when
+     calling `super()`.
+   - If you don't know the values of these attributes upfront, you can pass
+     default or placeholder values, or gather them from user input later.
 
 3. **Skipping Variables?**
-   - You cannot skip required variables in the parent class's `__init__`. If `Animal`'s `__init__` expects `breed` and `sex`, you must provide them when calling `super()`. Otherwise, Python will raise a `TypeError`.
+   - You cannot skip required variables in the parent class's `__init__`. If
+     `Animal`'s `__init__` expects `breed` and `sex`, you must provide them when
+     calling `super()`. Otherwise, Python will raise a `TypeError`.
 
 ---
 
@@ -155,5 +194,8 @@ This is an Object created using Dog, with: Bulldog with gender: 1
 ### Summary:
 
 - Use `super()` to call the parent class's constructor.
-- Pass all required variables from the subclass to the parent class via `super()`.
-- If a parent class needs specific arguments, they must be passed from the subclass. Alternatively, you can provide default values or input from other sources.
+- Pass all required variables from the subclass to the parent class via
+  `super()`.
+- If a parent class needs specific arguments, they must be passed from the
+  subclass. Alternatively, you can provide default values or input from other
+  sources.

@@ -1,11 +1,16 @@
 # SQL query directly
 
-In SQLAlchemy, the `text()` construct is used for **executing raw SQL statements** directly. It allows you to write SQL commands as text, providing flexibility when you need to use specific SQL syntax that may not be easily expressed in SQLAlchemy’s expression language. The `text()` construct can be used in both **SQLAlchemy Core** and **SQLAlchemy ORM**.
+In SQLAlchemy, the `text()` construct is used for **executing raw SQL
+statements** directly. It allows you to write SQL commands as text, providing
+flexibility when you need to use specific SQL syntax that may not be easily
+expressed in SQLAlchemy’s expression language. The `text()` construct can be
+used in both **SQLAlchemy Core** and **SQLAlchemy ORM**.
 
 ### Overview of `text()` in SQLAlchemy
 
 - **Purpose**: Enables direct SQL execution using raw SQL syntax.
-- **Usage**: Commonly used for complex queries, database-specific SQL, or when you want to bypass SQLAlchemy’s query generation.
+- **Usage**: Commonly used for complex queries, database-specific SQL, or when
+  you want to bypass SQLAlchemy’s query generation.
 - **Compatibility**: Works with both SQLAlchemy Core and ORM.
 
 ### Syntax and Examples for `text()` in SQLAlchemy Core
@@ -81,9 +86,13 @@ In ORM, `text()` is used with `session.execute()` to run raw SQL commands within
 
 ### Summary
 
-- **Core and ORM Compatibility**: `text()` can be used in both SQLAlchemy Core and ORM.
-- **Parameter Binding**: Supports named placeholders (e.g., `:parameter`) with dictionaries for parameter binding.
-- **Transactional Control**: In Core, use `conn.commit()`; in ORM, manage with `session.commit()`.
-- **Best Use Case**: Ideal for direct SQL statements that require control over the exact SQL syntax, often for performance optimization or custom queries.
+- **Core and ORM Compatibility**: `text()` can be used in both SQLAlchemy Core
+  and ORM.
+- **Parameter Binding**: Supports named placeholders (e.g., `:parameter`) with
+  dictionaries for parameter binding.
+- **Transactional Control**: In Core, use `conn.commit()`; in ORM, manage with
+  `session.commit()`.
+- **Best Use Case**: Ideal for direct SQL statements that require control over
+  the exact SQL syntax, often for performance optimization or custom queries.
 
 

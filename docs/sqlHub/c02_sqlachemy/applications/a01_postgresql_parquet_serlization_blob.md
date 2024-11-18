@@ -1,71 +1,72 @@
 # System Build - Storing Blobs
+
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+
 **Table of Contents**
 
 - [System Build - Storing Blobs](#system-build---storing-blobs)
-    - [Requirements advised](#requirements-advised)
-    - [Solution](#solution)
-        - [Explanation of Code](#explanation-of-code)
-        - [Requirements](#requirements)
-    - [Next Requirements](#next-requirements)
-        - [Explanation of Code Updates](#explanation-of-code-updates)
-    - [Next Requirements](#next-requirements-1)
-        - [Step 1: Define the Table Structure with Relationships](#step-1-define-the-table-structure-with-relationships)
-        - [Step 2: Create Tables if They Don’t Exist](#step-2-create-tables-if-they-dont-exist)
-        - [Step 3: Insert Initial Data](#step-3-insert-initial-data)
-        - [Step 4: Handle Delta Load](#step-4-handle-delta-load)
-        - [Code Implementation](#code-implementation)
+  - [Requirements advised](#requirements-advised)
+  - [Solution](#solution)
+    - [Explanation of Code](#explanation-of-code)
+    - [Requirements](#requirements)
+  - [Next Requirements](#next-requirements)
+    - [Explanation of Code Updates](#explanation-of-code-updates)
+  - [Next Requirements](#next-requirements-1)
+    - [Step 1: Define the Table Structure with Relationships](#step-1-define-the-table-structure-with-relationships)
+    - [Step 2: Create Tables if They Don’t Exist](#step-2-create-tables-if-they-dont-exist)
+    - [Step 3: Insert Initial Data](#step-3-insert-initial-data)
+    - [Step 4: Handle Delta Load](#step-4-handle-delta-load)
+    - [Code Implementation](#code-implementation)
 - [Define the base](#define-the-base)
 - [UUID generator function](#uuid-generator-function)
 - [Define CarBrand table (1-to-many with CarModel)](#define-carbrand-table-1-to-many-with-carmodel)
 - [Define CarModel table (1-to-many with CarInfo, many-to-1 with CarBrand)](#define-carmodel-table-1-to-many-with-carinfo-many-to-1-with-carbrand)
-    - [-](#-)
-    - [Next Requirements](#next-requirements-2)
-        - [1. **CarBrand Table**](#1-carbrand-table)
-        - [2. **CarModel Table**](#2-carmodel-table)
-        - [3. **CarInfo Table (Initial Load)**](#3-carinfo-table-initial-load)
-        - [4. **CarInfo Table (After Delta Load)**](#4-carinfo-table-after-delta-load)
-    - [Next Requirements](#next-requirements-3)
-        - [SQLAlchemy Query to Find a Specific Car by `car_id`](#sqlalchemy-query-to-find-a-specific-car-by-car_id)
-        - [Expected Result for the Query](#expected-result-for-the-query)
-    - [Dyanmic delta load](#dyanmic-delta-load)
-        - [Step 1: Create `CarInfoHistory` Table](#step-1-create-carinfohistory-table)
-        - [Step 2: Modify the Update Function to Log Changes](#step-2-modify-the-update-function-to-log-changes)
-        - [Step 3: Query Historical Data](#step-3-query-historical-data)
-        - [Code Implementation](#code-implementation-1)
-        - [Example Usage](#example-usage)
-        - [Expected Results for `CarInfoHistory` Table](#expected-results-for-carinfohistory-table)
-        - [Explanation of Output Fields:](#explanation-of-output-fields)
-    - [What will be affected in Dynamic delta-load?](#what-will-be-affected-in-dynamic-delta-load)
-    - [More about delta-load](#more-about-delta-load)
-        - [1. **Data Ingestion and Initial Load Preparation**](#1-data-ingestion-and-initial-load-preparation)
-        - [2. **Determine Change Detection Logic**](#2-determine-change-detection-logic)
-        - [3. **Implement Table-Specific Logic**](#3-implement-table-specific-logic)
-        - [4. **Optimize with Incremental Updates**](#4-optimize-with-incremental-updates)
-        - [5. **Transaction Management**](#5-transaction-management)
-        - [6. **Efficient Logging and Archiving**](#6-efficient-logging-and-archiving)
-        - [Summary of the Workflow](#summary-of-the-workflow)
-    - [Optimial way to store data in PostgreSQL](#optimial-way-to-store-data-in-postgresql)
-        - [1. Storing a Pickled DataFrame in PostgreSQL](#1-storing-a-pickled-dataframe-in-postgresql)
-            - [Steps](#steps)
-            - [Example Code](#example-code)
-            - [Expected Results](#expected-results)
-        - [2. Storing a DataFrame as JSON in PostgreSQL](#2-storing-a-dataframe-as-json-in-postgresql)
-            - [Steps](#steps-1)
-            - [Example Code](#example-code-1)
-            - [Expected Results](#expected-results-1)
-        - [Summary](#summary)
-    - [How about the size of the database?](#how-about-the-size-of-the-database)
-    - [Strategies and Ways to Mitigate Database Size Growth](#strategies-and-ways-to-mitigate-database-size-growth)
-    - [Serialize with Parquet](#serialize-with-parquet)
-        - [Advantages of Using Parquet for Serialization](#advantages-of-using-parquet-for-serialization)
-        - [How to Use Parquet for Serialization in PostgreSQL](#how-to-use-parquet-for-serialization-in-postgresql)
-        - [Example Code](#example-code-2)
-        - [Expected Results](#expected-results-2)
-        - [Summary](#summary-1)
+  - [-](#-)
+  - [Next Requirements](#next-requirements-2)
+    - [1. **CarBrand Table**](#1-carbrand-table)
+    - [2. **CarModel Table**](#2-carmodel-table)
+    - [3. **CarInfo Table (Initial Load)**](#3-carinfo-table-initial-load)
+    - [4. **CarInfo Table (After Delta Load)**](#4-carinfo-table-after-delta-load)
+  - [Next Requirements](#next-requirements-3)
+    - [SQLAlchemy Query to Find a Specific Car by `car_id`](#sqlalchemy-query-to-find-a-specific-car-by-car_id)
+    - [Expected Result for the Query](#expected-result-for-the-query)
+  - [Dyanmic delta load](#dyanmic-delta-load)
+    - [Step 1: Create `CarInfoHistory` Table](#step-1-create-carinfohistory-table)
+    - [Step 2: Modify the Update Function to Log Changes](#step-2-modify-the-update-function-to-log-changes)
+    - [Step 3: Query Historical Data](#step-3-query-historical-data)
+    - [Code Implementation](#code-implementation-1)
+    - [Example Usage](#example-usage)
+    - [Expected Results for `CarInfoHistory` Table](#expected-results-for-carinfohistory-table)
+    - [Explanation of Output Fields:](#explanation-of-output-fields)
+  - [What will be affected in Dynamic delta-load?](#what-will-be-affected-in-dynamic-delta-load)
+  - [More about delta-load](#more-about-delta-load)
+    - [1. **Data Ingestion and Initial Load Preparation**](#1-data-ingestion-and-initial-load-preparation)
+    - [2. **Determine Change Detection Logic**](#2-determine-change-detection-logic)
+    - [3. **Implement Table-Specific Logic**](#3-implement-table-specific-logic)
+    - [4. **Optimize with Incremental Updates**](#4-optimize-with-incremental-updates)
+    - [5. **Transaction Management**](#5-transaction-management)
+    - [6. **Efficient Logging and Archiving**](#6-efficient-logging-and-archiving)
+    - [Summary of the Workflow](#summary-of-the-workflow)
+  - [Optimial way to store data in PostgreSQL](#optimial-way-to-store-data-in-postgresql)
+    - [1. Storing a Pickled DataFrame in PostgreSQL](#1-storing-a-pickled-dataframe-in-postgresql)
+      - [Steps](#steps)
+      - [Example Code](#example-code)
+      - [Expected Results](#expected-results)
+    - [2. Storing a DataFrame as JSON in PostgreSQL](#2-storing-a-dataframe-as-json-in-postgresql)
+      - [Steps](#steps-1)
+      - [Example Code](#example-code-1)
+      - [Expected Results](#expected-results-1)
+    - [Summary](#summary)
+  - [How about the size of the database?](#how-about-the-size-of-the-database)
+  - [Strategies and Ways to Mitigate Database Size Growth](#strategies-and-ways-to-mitigate-database-size-growth)
+  - [Serialize with Parquet](#serialize-with-parquet)
+    - [Advantages of Using Parquet for Serialization](#advantages-of-using-parquet-for-serialization)
+    - [How to Use Parquet for Serialization in PostgreSQL](#how-to-use-parquet-for-serialization-in-postgresql)
+    - [Example Code](#example-code-2)
+    - [Expected Results](#expected-results-2)
+    - [Summary](#summary-1)
 
 <!-- markdown-toc end -->
-
 
 ## Requirements advised
 
@@ -919,10 +920,13 @@ Can a PostgreSQL database be used to store a Pandas DataFrame as a row? Or could
 a pickle file achieve this? If so, please provide a simple example with the
 expected results for both methods.
 
-Yes, PostgreSQL can store a pandas DataFrame as a single row, typically by serializing it before storage. Common approaches include:
+Yes, PostgreSQL can store a pandas DataFrame as a single row, typically by
+serializing it before storage. Common approaches include:
 
-1. **Storing as a Pickle File**: Serialize the DataFrame with `pickle`, then store it as a `BYTEA` (binary) in PostgreSQL.
-2. **Storing as JSON**: Convert the DataFrame to JSON format, then store it as a JSON or JSONB type.
+1. **Storing as a Pickle File**: Serialize the DataFrame with `pickle`, then
+   store it as a `BYTEA` (binary) in PostgreSQL.
+2. **Storing as JSON**: Convert the DataFrame to JSON format, then store it as a
+   JSON or JSONB type.
 
 Let’s go over each approach with examples and expected results.
 
